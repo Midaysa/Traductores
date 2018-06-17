@@ -1,0 +1,1847 @@
+
+
+-------- Grammar --------
+
+rule 1 S: Bloque
+rule 2 Bloque: "with" ListaDeclaraciones "begin" Instrucciones "end"
+rule 3 Bloque: "begin" Instrucciones "end"
+rule 4 ListaDeclaraciones: Declaracion
+rule 5 ListaDeclaraciones: Declaracion "," ListaDeclaraciones
+rule 6 Declaracion: "var" ListaId ":" Tipo
+rule 7 Tipo: "int"
+rule 8 Tipo: "bool"
+rule 9 Tipo: "char"
+rule 10 Tipo: "array" "[" Expresion "]" "of" Tipo
+rule 11 ListaId: Id "," ListaId
+rule 12 ListaId: Id "<-" Expresion "," ListaId
+rule 13 ListaId: Id
+rule 14 ListaId: Id "<-" Expresion
+rule 15 Asignacion: Id "<-" Expresion
+rule 16 Asignacion: Id ListaCorchetes "=" Expresion
+rule 17 ListaCorchetes: "[" Expresion "]"
+rule 18 ListaCorchetes: "[" Expresion "]" ListaCorchetes
+rule 19 Instrucciones: Instruccion
+rule 20 Instrucciones: Instruccion Instrucciones
+rule 21 Instruccion: Asignacion ";"
+rule 22 Instruccion: Bloque
+rule 23 Instruccion: Condicional
+rule 24 Instruccion: IteracionInd
+rule 25 Instruccion: IteracionDet
+rule 26 Instruccion: Entrada ";"
+rule 27 Instruccion: Salida ";"
+rule 28 Condicional: "if" Expresion "->" Instrucciones "end"
+rule 29 Condicional: "if" Expresion "->" Instrucciones "otherwise" Instrucciones "end"
+rule 30 IteracionInd: "while" Expresion "->" Instrucciones "end"
+rule 31 IteracionDet: "for" Id "from" Expresion "to" Expresion "->" Instrucciones "end"
+rule 32 IteracionDet: "for" Id "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
+rule 33 Entrada: "read" Id
+rule 34 Salida: "print" Expresion
+rule 35 Expresion: Literal
+rule 36 Expresion: "-" Expresion
+rule 37 Expresion: "(" Expresion ")"
+rule 38 Expresion: Literal "." Expresion
+rule 39 Expresion: Literal "+" Expresion
+rule 40 Expresion: Literal "-" Expresion
+rule 41 Expresion: Literal "*" Expresion
+rule 42 Expresion: Literal "/" Expresion
+rule 43 Expresion: Literal "%" Expresion
+rule 44 Expresion: Literal "\\/" Expresion
+rule 45 Expresion: Literal "/\\" Expresion
+rule 46 Expresion: "not" Expresion
+rule 47 Expresion: Literal "++"
+rule 48 Expresion: Literal "--"
+rule 49 Expresion: "#" Expresion
+rule 50 Expresion: Literal "::" Expresion
+rule 51 Expresion: "$" Expresion
+rule 52 Expresion: Id "[" Expresion "]"
+rule 53 Expresion: Literal "<" Expresion
+rule 54 Expresion: Literal "<=" Expresion
+rule 55 Expresion: Literal ">" Expresion
+rule 56 Expresion: Literal ">=" Expresion
+rule 57 Expresion: Literal "=" Expresion
+rule 58 Expresion: Literal "/=" Expresion
+rule 59 Expresion: Asignacion
+rule 60 Literal: Id
+rule 61 Literal: "tknum"
+rule 62 Literal: "tkcaracter"
+rule 63 Literal: "true"
+rule 64 Literal: "false"
+rule 65 Id: "tkid"
+
+------- Symbols -------
+
+**Nonterminals, with rules where they appear
+
+  $start (58)
+    on right: 
+    on left : 
+  S (59)
+    on right: 
+    on left : 1
+  Bloque (60)
+    on right: 1 22
+    on left : 2 3
+  ListaDeclaraciones (61)
+    on right: 2 5
+    on left : 4 5
+  Instrucciones (62)
+    on right: 2 3 20 28 29 30 31 32
+    on left : 19 20
+  Declaracion (63)
+    on right: 4 5
+    on left : 6
+  ListaId (64)
+    on right: 6 11 12
+    on left : 11 12 13 14
+  Tipo (65)
+    on right: 6 10
+    on left : 7 8 9 10
+  Expresion (66)
+    on right: 10 12 14 15 16 17 18 28 29 30 31 32 34 36 37 38 39 40 41 42 43 44 45 46 49 50 51 52 53 54 55 56 57 58
+    on left : 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
+  Id (67)
+    on right: 11 12 13 14 15 16 31 32 33 52 60
+    on left : 65
+  Asignacion (68)
+    on right: 21 59
+    on left : 15 16
+  ListaCorchetes (69)
+    on right: 16 18
+    on left : 17 18
+  Instruccion (70)
+    on right: 19 20
+    on left : 21 22 23 24 25 26 27
+  Condicional (71)
+    on right: 23
+    on left : 28 29
+  IteracionInd (72)
+    on right: 24
+    on left : 30
+  IteracionDet (73)
+    on right: 25
+    on left : 31 32
+  Entrada (74)
+    on right: 26
+    on left : 33
+  Salida (75)
+    on right: 27
+    on left : 34
+  Literal (76)
+    on right: 35 38 39 40 41 42 43 44 45 47 48 50 53 54 55 56 57 58
+    on left : 60 61 62 63 64
+
+**Terminals, with rules where they appear
+
+  $end (0) 
+  error (1) 
+  "TkId" (2) 
+  "TkNum" (3) 
+  "TkCaracter" (4) 
+  ")" (5) 37
+  "(" (6) 37
+  "[" (7) 10 17 18 52
+  "]" (8) 10 17 18 52
+  "::" (9) 50
+  "$" (10) 51
+  "++" (11) 47
+  "--" (12) 48
+  "#" (13) 49
+  "+" (14) 39
+  "-" (15) 36 40
+  "*" (16) 41
+  "/" (17) 42
+  "%" (18) 43
+  UMINUS (19) 
+  "\\/" (20) 44
+  "/\\" (21) 45
+  "not" (22) 46
+  "<" (23) 53
+  "<=" (24) 54
+  ">" (25) 55
+  ">=" (26) 56
+  "=" (27) 16 57
+  "/=" (28) 58
+  "with" (29) 2
+  "begin" (30) 2 3
+  "end" (31) 2 3 28 29 30 31 32
+  "array" (32) 10
+  "var" (33) 6
+  "of" (34) 10
+  "int" (35) 7
+  "bool" (36) 8
+  "char" (37) 9
+  "if" (38) 28 29
+  "otherwise" (39) 29
+  "while" (40) 30
+  "for" (41) 31 32
+  "from" (42) 31 32
+  "to" (43) 31 32
+  "step" (44) 32
+  "read" (45) 33
+  "print" (46) 34
+  "," (47) 5 11 12
+  "." (48) 38
+  ";" (49) 21 26 27
+  ":" (50) 6
+  "->" (51) 28 29 30 31 32
+  "<-" (52) 12 14 15
+  "true" (53) 63
+  "false" (54) 64
+  "tkid" (55) 65
+  "tknum" (56) 61
+  "tkcaracter" (57) 62
+
+--------- State ---------
+
+state 0
+
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+
+  S             go to state 1
+  Bloque        go to state 2
+
+state 1
+
+
+  $end          shift, and go to state 5
+
+
+state 2
+
+   1) S : Bloque _
+
+  $default      reduce using rule 1 (S)
+
+
+state 3
+
+   2) Bloque : "with" _ ListaDeclaraciones "begin" Instrucciones "end"
+
+  "var"         shift, and go to state 8
+
+  ListaDeclaraciones  go to state 6
+  Declaracion   go to state 7
+
+state 4
+
+   3) Bloque : "begin" _ Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Instrucciones  go to state 9
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+
+state 5
+
+
+  $end          shift, and go to state 25
+
+
+state 6
+
+   2) Bloque : "with" ListaDeclaraciones _ "begin" Instrucciones "end"
+
+  "begin"       shift, and go to state 26
+
+
+state 7
+
+   4) ListaDeclaraciones : Declaracion _
+   5) ListaDeclaraciones : Declaracion _ "," ListaDeclaraciones
+
+  ","           shift, and go to state 27
+  $default      reduce using rule 4 (ListaDeclaraciones)
+
+
+state 8
+
+   6) Declaracion : "var" _ ListaId ":" Tipo
+
+  "tkid"        shift, and go to state 24
+
+  ListaId       go to state 28
+  Id            go to state 29
+
+state 9
+
+   3) Bloque : "begin" Instrucciones _ "end"
+
+  "end"         shift, and go to state 30
+
+
+state 10
+
+  15) Asignacion : Id _ "<-" Expresion
+  16) Asignacion : Id _ ListaCorchetes "=" Expresion
+
+  "["           shift, and go to state 33
+  "<-"          shift, and go to state 31
+
+  ListaCorchetes  go to state 32
+
+state 11
+
+  19) Instrucciones : Instruccion _
+  20) Instrucciones : Instruccion _ Instrucciones
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+  $default      reduce using rule 19 (Instrucciones)
+
+  Id            go to state 10
+  Instruccion   go to state 11
+  Instrucciones  go to state 34
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+
+state 12
+
+  21) Instruccion : Asignacion _ ";"
+
+  ";"           shift, and go to state 35
+
+
+state 13
+
+  22) Instruccion : Bloque _
+
+  $default      reduce using rule 22 (Instruccion)
+
+
+state 14
+
+  23) Instruccion : Condicional _
+
+  $default      reduce using rule 23 (Instruccion)
+
+
+state 15
+
+  24) Instruccion : IteracionInd _
+
+  $default      reduce using rule 24 (Instruccion)
+
+
+state 16
+
+  25) Instruccion : IteracionDet _
+
+  $default      reduce using rule 25 (Instruccion)
+
+
+state 17
+
+  26) Instruccion : Entrada _ ";"
+
+  ";"           shift, and go to state 36
+
+
+state 18
+
+  27) Instruccion : Salida _ ";"
+
+  ";"           shift, and go to state 37
+
+
+state 19
+
+  28) Condicional : "if" _ Expresion "->" Instrucciones "end"
+  29) Condicional : "if" _ Expresion "->" Instrucciones "otherwise" Instrucciones "end"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 39
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 20
+
+  30) IteracionInd : "while" _ Expresion "->" Instrucciones "end"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 51
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 21
+
+  31) IteracionDet : "for" _ Id "from" Expresion "to" Expresion "->" Instrucciones "end"
+  32) IteracionDet : "for" _ Id "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
+
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 52
+
+state 22
+
+  33) Entrada : "read" _ Id
+
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 53
+
+state 23
+
+  34) Salida : "print" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 54
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 24
+
+  65) Id : "tkid" _
+
+  $default      reduce using rule 65 (Id)
+
+
+state 25
+
+
+  $default      accept
+
+
+state 26
+
+   2) Bloque : "with" ListaDeclaraciones "begin" _ Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Instrucciones  go to state 55
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+
+state 27
+
+   5) ListaDeclaraciones : Declaracion "," _ ListaDeclaraciones
+
+  "var"         shift, and go to state 8
+
+  Declaracion   go to state 7
+  ListaDeclaraciones  go to state 56
+
+state 28
+
+   6) Declaracion : "var" ListaId _ ":" Tipo
+
+  ":"           shift, and go to state 57
+
+
+state 29
+
+  11) ListaId : Id _ "," ListaId
+  12) ListaId : Id _ "<-" Expresion "," ListaId
+  13) ListaId : Id _
+  14) ListaId : Id _ "<-" Expresion
+
+  ","           shift, and go to state 58
+  "<-"          shift, and go to state 59
+  $default      reduce using rule 13 (ListaId)
+
+
+state 30
+
+   3) Bloque : "begin" Instrucciones "end" _
+
+  $default      reduce using rule 3 (Bloque)
+
+
+state 31
+
+  15) Asignacion : Id "<-" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 60
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 32
+
+  16) Asignacion : Id ListaCorchetes _ "=" Expresion
+
+  "="           shift, and go to state 61
+
+
+state 33
+
+  17) ListaCorchetes : "[" _ Expresion "]"
+  18) ListaCorchetes : "[" _ Expresion "]" ListaCorchetes
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 62
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 34
+
+  20) Instrucciones : Instruccion Instrucciones _
+
+  $default      reduce using rule 20 (Instrucciones)
+
+
+state 35
+
+  21) Instruccion : Asignacion ";" _
+
+  $default      reduce using rule 21 (Instruccion)
+
+
+state 36
+
+  26) Instruccion : Entrada ";" _
+
+  $default      reduce using rule 26 (Instruccion)
+
+
+state 37
+
+  27) Instruccion : Salida ";" _
+
+  $default      reduce using rule 27 (Instruccion)
+
+
+state 38
+
+  15) Asignacion : Id _ "<-" Expresion
+  16) Asignacion : Id _ ListaCorchetes "=" Expresion
+  52) Expresion : Id _ "[" Expresion "]"
+  60) Literal : Id _
+
+  "["           shift, and go to state 63
+  "<-"          shift, and go to state 31
+  $default      reduce using rule 60 (Literal)
+
+  ListaCorchetes  go to state 32
+
+state 39
+
+  28) Condicional : "if" Expresion _ "->" Instrucciones "end"
+  29) Condicional : "if" Expresion _ "->" Instrucciones "otherwise" Instrucciones "end"
+
+  "->"          shift, and go to state 64
+
+
+state 40
+
+  35) Expresion : Literal _
+  38) Expresion : Literal _ "." Expresion
+  39) Expresion : Literal _ "+" Expresion
+  40) Expresion : Literal _ "-" Expresion
+  41) Expresion : Literal _ "*" Expresion
+  42) Expresion : Literal _ "/" Expresion
+  43) Expresion : Literal _ "%" Expresion
+  44) Expresion : Literal _ "\\/" Expresion
+  45) Expresion : Literal _ "/\\" Expresion
+  47) Expresion : Literal _ "++"
+  48) Expresion : Literal _ "--"
+  50) Expresion : Literal _ "::" Expresion
+  53) Expresion : Literal _ "<" Expresion
+  54) Expresion : Literal _ "<=" Expresion
+  55) Expresion : Literal _ ">" Expresion
+  56) Expresion : Literal _ ">=" Expresion
+  57) Expresion : Literal _ "=" Expresion
+  58) Expresion : Literal _ "/=" Expresion
+
+  "::"          shift, and go to state 75
+  "++"          shift, and go to state 73
+  "--"          shift, and go to state 74
+  "+"           shift, and go to state 66
+  "-"           shift, and go to state 67
+  "*"           shift, and go to state 68
+  "/"           shift, and go to state 69
+  "%"           shift, and go to state 70
+  "\\/"         shift, and go to state 71
+  "/\\"         shift, and go to state 72
+  "<"           shift, and go to state 76
+  "<="          shift, and go to state 77
+  ">"           shift, and go to state 78
+  ">="          shift, and go to state 79
+  "="           shift, and go to state 80
+  "/="          shift, and go to state 81
+  "."           shift, and go to state 65
+  $default      reduce using rule 35 (Expresion)
+
+
+state 41
+
+  36) Expresion : "-" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 82
+  Asignacion    go to state 46
+
+state 42
+
+  37) Expresion : "(" _ Expresion ")"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 83
+  Asignacion    go to state 46
+
+state 43
+
+  46) Expresion : "not" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 84
+  Asignacion    go to state 46
+
+state 44
+
+  49) Expresion : "#" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 85
+  Asignacion    go to state 46
+
+state 45
+
+  51) Expresion : "$" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 86
+  Asignacion    go to state 46
+
+state 46
+
+  59) Expresion : Asignacion _
+
+  $default      reduce using rule 59 (Expresion)
+
+
+state 47
+
+  61) Literal : "tknum" _
+
+  $default      reduce using rule 61 (Literal)
+
+
+state 48
+
+  62) Literal : "tkcaracter" _
+
+  $default      reduce using rule 62 (Literal)
+
+
+state 49
+
+  63) Literal : "true" _
+
+  $default      reduce using rule 63 (Literal)
+
+
+state 50
+
+  64) Literal : "false" _
+
+  $default      reduce using rule 64 (Literal)
+
+
+state 51
+
+  30) IteracionInd : "while" Expresion _ "->" Instrucciones "end"
+
+  "->"          shift, and go to state 87
+
+
+state 52
+
+  31) IteracionDet : "for" Id _ "from" Expresion "to" Expresion "->" Instrucciones "end"
+  32) IteracionDet : "for" Id _ "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
+
+  "from"        shift, and go to state 88
+
+
+state 53
+
+  33) Entrada : "read" Id _
+
+  $default      reduce using rule 33 (Entrada)
+
+
+state 54
+
+  34) Salida : "print" Expresion _
+
+  $default      reduce using rule 34 (Salida)
+
+
+state 55
+
+   2) Bloque : "with" ListaDeclaraciones "begin" Instrucciones _ "end"
+
+  "end"         shift, and go to state 89
+
+
+state 56
+
+   5) ListaDeclaraciones : Declaracion "," ListaDeclaraciones _
+
+  $default      reduce using rule 5 (ListaDeclaraciones)
+
+
+state 57
+
+   6) Declaracion : "var" ListaId ":" _ Tipo
+
+  "array"       shift, and go to state 94
+  "int"         shift, and go to state 91
+  "bool"        shift, and go to state 92
+  "char"        shift, and go to state 93
+
+  Tipo          go to state 90
+
+state 58
+
+  11) ListaId : Id "," _ ListaId
+
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 29
+  ListaId       go to state 95
+
+state 59
+
+  12) ListaId : Id "<-" _ Expresion "," ListaId
+  14) ListaId : Id "<-" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Expresion     go to state 96
+  Id            go to state 38
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 60
+
+  15) Asignacion : Id "<-" Expresion _
+
+  $default      reduce using rule 15 (Asignacion)
+
+
+state 61
+
+  16) Asignacion : Id ListaCorchetes "=" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 97
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 62
+
+  17) ListaCorchetes : "[" Expresion _ "]"
+  18) ListaCorchetes : "[" Expresion _ "]" ListaCorchetes
+
+  "]"           shift, and go to state 98
+
+
+state 63
+
+  17) ListaCorchetes : "[" _ Expresion "]"
+  18) ListaCorchetes : "[" _ Expresion "]" ListaCorchetes
+  52) Expresion : Id "[" _ Expresion "]"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 99
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 64
+
+  28) Condicional : "if" Expresion "->" _ Instrucciones "end"
+  29) Condicional : "if" Expresion "->" _ Instrucciones "otherwise" Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+  Instrucciones  go to state 100
+
+state 65
+
+  38) Expresion : Literal "." _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 101
+  Asignacion    go to state 46
+
+state 66
+
+  39) Expresion : Literal "+" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 102
+  Asignacion    go to state 46
+
+state 67
+
+  40) Expresion : Literal "-" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 103
+  Asignacion    go to state 46
+
+state 68
+
+  41) Expresion : Literal "*" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 104
+  Asignacion    go to state 46
+
+state 69
+
+  42) Expresion : Literal "/" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 105
+  Asignacion    go to state 46
+
+state 70
+
+  43) Expresion : Literal "%" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 106
+  Asignacion    go to state 46
+
+state 71
+
+  44) Expresion : Literal "\\/" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 107
+  Asignacion    go to state 46
+
+state 72
+
+  45) Expresion : Literal "/\\" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 108
+  Asignacion    go to state 46
+
+state 73
+
+  47) Expresion : Literal "++" _
+
+  $default      reduce using rule 47 (Expresion)
+
+
+state 74
+
+  48) Expresion : Literal "--" _
+
+  $default      reduce using rule 48 (Expresion)
+
+
+state 75
+
+  50) Expresion : Literal "::" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 109
+  Asignacion    go to state 46
+
+state 76
+
+  53) Expresion : Literal "<" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 110
+  Asignacion    go to state 46
+
+state 77
+
+  54) Expresion : Literal "<=" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 111
+  Asignacion    go to state 46
+
+state 78
+
+  55) Expresion : Literal ">" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 112
+  Asignacion    go to state 46
+
+state 79
+
+  56) Expresion : Literal ">=" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 113
+  Asignacion    go to state 46
+
+state 80
+
+  57) Expresion : Literal "=" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 114
+  Asignacion    go to state 46
+
+state 81
+
+  58) Expresion : Literal "/=" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 115
+  Asignacion    go to state 46
+
+state 82
+
+  36) Expresion : "-" Expresion _
+
+  $default      reduce using rule 36 (Expresion)
+
+
+state 83
+
+  37) Expresion : "(" Expresion _ ")"
+
+  ")"           shift, and go to state 116
+
+
+state 84
+
+  46) Expresion : "not" Expresion _
+
+  $default      reduce using rule 46 (Expresion)
+
+
+state 85
+
+  49) Expresion : "#" Expresion _
+
+  $default      reduce using rule 49 (Expresion)
+
+
+state 86
+
+  51) Expresion : "$" Expresion _
+
+  $default      reduce using rule 51 (Expresion)
+
+
+state 87
+
+  30) IteracionInd : "while" Expresion "->" _ Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+  Instrucciones  go to state 117
+
+state 88
+
+  31) IteracionDet : "for" Id "from" _ Expresion "to" Expresion "->" Instrucciones "end"
+  32) IteracionDet : "for" Id "from" _ Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 118
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 89
+
+   2) Bloque : "with" ListaDeclaraciones "begin" Instrucciones "end" _
+
+  $default      reduce using rule 2 (Bloque)
+
+
+state 90
+
+   6) Declaracion : "var" ListaId ":" Tipo _
+
+  $default      reduce using rule 6 (Declaracion)
+
+
+state 91
+
+   7) Tipo : "int" _
+
+  $default      reduce using rule 7 (Tipo)
+
+
+state 92
+
+   8) Tipo : "bool" _
+
+  $default      reduce using rule 8 (Tipo)
+
+
+state 93
+
+   9) Tipo : "char" _
+
+  $default      reduce using rule 9 (Tipo)
+
+
+state 94
+
+  10) Tipo : "array" _ "[" Expresion "]" "of" Tipo
+
+  "["           shift, and go to state 119
+
+
+state 95
+
+  11) ListaId : Id "," ListaId _
+
+  $default      reduce using rule 11 (ListaId)
+
+
+state 96
+
+  12) ListaId : Id "<-" Expresion _ "," ListaId
+  14) ListaId : Id "<-" Expresion _
+
+  ","           shift, and go to state 120
+  $default      reduce using rule 14 (ListaId)
+
+
+state 97
+
+  16) Asignacion : Id ListaCorchetes "=" Expresion _
+
+  $default      reduce using rule 16 (Asignacion)
+
+
+state 98
+
+  17) ListaCorchetes : "[" Expresion "]" _
+  18) ListaCorchetes : "[" Expresion "]" _ ListaCorchetes
+
+  "["           shift, and go to state 33
+  $default      reduce using rule 17 (ListaCorchetes)
+
+  ListaCorchetes  go to state 121
+
+state 99
+
+  17) ListaCorchetes : "[" Expresion _ "]"
+  18) ListaCorchetes : "[" Expresion _ "]" ListaCorchetes
+  52) Expresion : Id "[" Expresion _ "]"
+
+  "]"           shift, and go to state 122
+
+
+state 100
+
+  28) Condicional : "if" Expresion "->" Instrucciones _ "end"
+  29) Condicional : "if" Expresion "->" Instrucciones _ "otherwise" Instrucciones "end"
+
+  "end"         shift, and go to state 123
+  "otherwise"   shift, and go to state 124
+
+
+state 101
+
+  38) Expresion : Literal "." Expresion _
+
+  $default      reduce using rule 38 (Expresion)
+
+
+state 102
+
+  39) Expresion : Literal "+" Expresion _
+
+  $default      reduce using rule 39 (Expresion)
+
+
+state 103
+
+  40) Expresion : Literal "-" Expresion _
+
+  $default      reduce using rule 40 (Expresion)
+
+
+state 104
+
+  41) Expresion : Literal "*" Expresion _
+
+  $default      reduce using rule 41 (Expresion)
+
+
+state 105
+
+  42) Expresion : Literal "/" Expresion _
+
+  $default      reduce using rule 42 (Expresion)
+
+
+state 106
+
+  43) Expresion : Literal "%" Expresion _
+
+  $default      reduce using rule 43 (Expresion)
+
+
+state 107
+
+  44) Expresion : Literal "\\/" Expresion _
+
+  $default      reduce using rule 44 (Expresion)
+
+
+state 108
+
+  45) Expresion : Literal "/\\" Expresion _
+
+  $default      reduce using rule 45 (Expresion)
+
+
+state 109
+
+  50) Expresion : Literal "::" Expresion _
+
+  $default      reduce using rule 50 (Expresion)
+
+
+state 110
+
+  53) Expresion : Literal "<" Expresion _
+
+  $default      reduce using rule 53 (Expresion)
+
+
+state 111
+
+  54) Expresion : Literal "<=" Expresion _
+
+  $default      reduce using rule 54 (Expresion)
+
+
+state 112
+
+  55) Expresion : Literal ">" Expresion _
+
+  $default      reduce using rule 55 (Expresion)
+
+
+state 113
+
+  56) Expresion : Literal ">=" Expresion _
+
+  $default      reduce using rule 56 (Expresion)
+
+
+state 114
+
+  57) Expresion : Literal "=" Expresion _
+
+  $default      reduce using rule 57 (Expresion)
+
+
+state 115
+
+  58) Expresion : Literal "/=" Expresion _
+
+  $default      reduce using rule 58 (Expresion)
+
+
+state 116
+
+  37) Expresion : "(" Expresion ")" _
+
+  $default      reduce using rule 37 (Expresion)
+
+
+state 117
+
+  30) IteracionInd : "while" Expresion "->" Instrucciones _ "end"
+
+  "end"         shift, and go to state 125
+
+
+state 118
+
+  31) IteracionDet : "for" Id "from" Expresion _ "to" Expresion "->" Instrucciones "end"
+  32) IteracionDet : "for" Id "from" Expresion _ "to" Expresion "step" Expresion "->" Instrucciones "end"
+
+  "to"          shift, and go to state 126
+
+
+state 119
+
+  10) Tipo : "array" "[" _ Expresion "]" "of" Tipo
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Expresion     go to state 127
+  Id            go to state 38
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 120
+
+  12) ListaId : Id "<-" Expresion "," _ ListaId
+
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 29
+  ListaId       go to state 128
+
+state 121
+
+  18) ListaCorchetes : "[" Expresion "]" ListaCorchetes _
+
+  $default      reduce using rule 18 (ListaCorchetes)
+
+
+state 122
+
+  17) ListaCorchetes : "[" Expresion "]" _
+  18) ListaCorchetes : "[" Expresion "]" _ ListaCorchetes
+  52) Expresion : Id "[" Expresion "]" _
+
+  "["           shift, and go to state 33
+  "="           reduce using rule 17 (ListaCorchetes)
+  $default      reduce using rule 52 (Expresion)
+
+  ListaCorchetes  go to state 121
+
+state 123
+
+  28) Condicional : "if" Expresion "->" Instrucciones "end" _
+
+  $default      reduce using rule 28 (Condicional)
+
+
+state 124
+
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" _ Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+  Instrucciones  go to state 129
+
+state 125
+
+  30) IteracionInd : "while" Expresion "->" Instrucciones "end" _
+
+  $default      reduce using rule 30 (IteracionInd)
+
+
+state 126
+
+  31) IteracionDet : "for" Id "from" Expresion "to" _ Expresion "->" Instrucciones "end"
+  32) IteracionDet : "for" Id "from" Expresion "to" _ Expresion "step" Expresion "->" Instrucciones "end"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 130
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 127
+
+  10) Tipo : "array" "[" Expresion _ "]" "of" Tipo
+
+  "]"           shift, and go to state 131
+
+
+state 128
+
+  12) ListaId : Id "<-" Expresion "," ListaId _
+
+  $default      reduce using rule 12 (ListaId)
+
+
+state 129
+
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" Instrucciones _ "end"
+
+  "end"         shift, and go to state 132
+
+
+state 130
+
+  31) IteracionDet : "for" Id "from" Expresion "to" Expresion _ "->" Instrucciones "end"
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion _ "step" Expresion "->" Instrucciones "end"
+
+  "step"        shift, and go to state 134
+  "->"          shift, and go to state 133
+
+
+state 131
+
+  10) Tipo : "array" "[" Expresion "]" _ "of" Tipo
+
+  "of"          shift, and go to state 135
+
+
+state 132
+
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" Instrucciones "end" _
+
+  $default      reduce using rule 29 (Condicional)
+
+
+state 133
+
+  31) IteracionDet : "for" Id "from" Expresion "to" Expresion "->" _ Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+  Instrucciones  go to state 136
+
+state 134
+
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" _ Expresion "->" Instrucciones "end"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 137
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 135
+
+  10) Tipo : "array" "[" Expresion "]" "of" _ Tipo
+
+  "array"       shift, and go to state 94
+  "int"         shift, and go to state 91
+  "bool"        shift, and go to state 92
+  "char"        shift, and go to state 93
+
+  Tipo          go to state 138
+
+state 136
+
+  31) IteracionDet : "for" Id "from" Expresion "to" Expresion "->" Instrucciones _ "end"
+
+  "end"         shift, and go to state 139
+
+
+state 137
+
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" Expresion _ "->" Instrucciones "end"
+
+  "->"          shift, and go to state 140
+
+
+state 138
+
+  10) Tipo : "array" "[" Expresion "]" "of" Tipo _
+
+  $default      reduce using rule 10 (Tipo)
+
+
+state 139
+
+  31) IteracionDet : "for" Id "from" Expresion "to" Expresion "->" Instrucciones "end" _
+
+  $default      reduce using rule 31 (IteracionDet)
+
+
+state 140
+
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" Expresion "->" _ Instrucciones "end"
+
+  "with"        shift, and go to state 3
+  "begin"       shift, and go to state 4
+  "if"          shift, and go to state 19
+  "while"       shift, and go to state 20
+  "for"         shift, and go to state 21
+  "read"        shift, and go to state 22
+  "print"       shift, and go to state 23
+  "tkid"        shift, and go to state 24
+
+  Id            go to state 10
+  Instruccion   go to state 11
+  Asignacion    go to state 12
+  Bloque        go to state 13
+  Condicional   go to state 14
+  IteracionInd  go to state 15
+  IteracionDet  go to state 16
+  Entrada       go to state 17
+  Salida        go to state 18
+  Instrucciones  go to state 141
+
+state 141
+
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones _ "end"
+
+  "end"         shift, and go to state 142
+
+
+state 142
+
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones "end" _
+
+  $default      reduce using rule 32 (IteracionDet)
+

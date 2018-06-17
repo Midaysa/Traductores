@@ -1,0 +1,8 @@
+with
+	var m : array [5] of int
+begin 
+	bar <- a[5-6];
+	hhh <- a::b+3*3 ;
+ 	a <-  a/\b;
+	print a;
+end 
