@@ -17,7 +17,7 @@ class Parser
     	left '['
     	left ']'
     	left '::'
-        right '$'
+        left '$'
     	left '++' '--'
     	left '#'
         left '+' '-'
@@ -26,7 +26,7 @@ class Parser
         left '\/'
         left '/\\'
         left 'not' 
-        left '<' '<=' '>' '>=' '=' '/='
+        nonassoc '=' '/=' '>=' '<=' '>' '<'
 	preclow
 	
 	convert
@@ -99,7 +99,7 @@ class Parser
 
 		ListaDeclaraciones
 			: Declaracion 												{result = DeclaracionesList.new(val[0], nil)}	
-			| Declaracion ',' ListaDeclaraciones					 	{result = DeclaracionesList.new(val[0], val[2])}
+			| Declaracion   ListaDeclaraciones					 	{result = DeclaracionesList.new(val[0], val[2])}
 			;
 			
 
@@ -150,7 +150,7 @@ class Parser
 
 		Condicional
 			: 'if' Expresion '->' Instrucciones 'end'									{result = Condicional.new(val[1], val[3])}
-			| 'if' Expresion '->' Instrucciones 'otherwise' Instrucciones 'end' 		{result = CondicionalOth.new(val[1], val[3], val[5])}
+			| 'if' Expresion '->' Instrucciones 'otherwise' '->' Instrucciones 'end' 		{result = CondicionalOth.new(val[1], val[3], val[6])}
 			;
 
 		IteracionInd
@@ -159,13 +159,12 @@ class Parser
 
 		IteracionDet
 			: 'for' Id 'from' Expresion 'to' Expresion '->' Instrucciones 'end'							{result = IteracionDet.new(val[1], val[3], val[5], val[7], nil)}
-			| 'for' Id 'from' Expresion 'to' Expresion 'step' Expresion '->' Instrucciones 'end'		{result = IteracionDet.new(val[1], val[3], val[5], val[7], val[9])}
+			| 'for' Id 'from' Expresion 'to' Expresion 'step' Expresion '->' Instrucciones 'end'		{result = IteracionDet.new(val[1], val[3], val[5], val[9], val[7])}
 			;
 
 		Entrada
 			: 'read' Id 						{result = Entrada.new(val[1])}
-			;
-
+			; 
 		Salida
 			: 'print' Expresion					{result = Salida.new(val[1])}
 			;
@@ -175,27 +174,27 @@ class Parser
 			: Literal							{result = val[0]}
 			| '-' Expresion = UMINUS 			{result = Negativo.new(val[1])}
 			| '(' Expresion ')'                 {result = val[1]}
-			| Literal '.' Expresion		    	{result = PuntoParser.new(val[0], val[2])}                   	             
-			| Literal'+' Expresion		    	{result = Sumar.new(val[0], val[2])}
-			| Literal '-' Expresion		    	{result = Restar.new(val[0], val[2])}
-			| Literal '*' Expresion		    	{result = Multiplicacion.new(val[0], val[2])}
-			| Literal '/' Expresion		    	{result = Division.new(val[0], val[2])}
-			| Literal '%' Expresion		    	{result = Modulo.new(val[0], val[2])}
-			| Literal '\/' Expresion			{result = Or.new(val[0], val[2])}
-			| Literal '/\\' Expresion			{result = And.new(val[0], val[2])}
+			| Expresion'.' Expresion		    	{result = PuntoParser.new(val[0], val[2])}                   	             
+			| Expresion'+' Expresion		    	{result = Sumar.new(val[0], val[2])}
+			| Expresion'-' Expresion		    	{result = Restar.new(val[0], val[2])}
+			| Expresion '*' Expresion		    	{result = Multiplicacion.new(val[0], val[2])}
+			| Expresion '/' Expresion		    	{result = Division.new(val[0], val[2])}
+			| Expresion '%' Expresion		    	{result = Modulo.new(val[0], val[2])}
+			| Expresion'\/' Expresion			{result = Or.new(val[0], val[2])}
+			| Expresion'/\\' Expresion			{result = And.new(val[0], val[2])}
 			| 'not' Expresion					{result = Not.new(val[1])}
-			| Literal '++'						{result = CaracterSiguiente.new(val[0])}
-			| Literal '--'				    	{result = CaracterAnterior.new(val[0])}
+			| Expresion '++'						{result = CaracterSiguiente.new(val[0])}
+			| Expresion '--'				    	{result = CaracterAnterior.new(val[0])}
 			| '#' Expresion					   	{result = ValorAsciiParser.new(val[1])}
-			| Literal '::' Expresion			{result = Concatenar.new(val[0], val[2])}
+			| Expresion'::' Expresion			{result = Concatenar.new(val[0], val[2])}
 			| '$' Expresion						{result = ShiftParser.new(val[1])}
-			| Id '[' Expresion ']'		    	{result = Indexacion.new(val[0], val[2])}
-			| Literal '<' Expresion			    {result = MenorQue.new(val[0], val[2])}
-			| Literal '<=' Expresion			{result = MenorIgualQue.new(val[0], val[2])}
-			| Literal '>' Expresion	    		{result = MayorQue.new(val[0], val[2])}
-			| Literal '>=' Expresion			{result = MayorIgualQue.new(val[0], val[2])}
-			| Literal '=' Expresion		    	{result = Igualdad.new(val[0], val[2])}
-			| Literal '/=' Expresion			{result = Desigual.new(val[0], val[2])}
+			| Expresion'[' Expresion ']'		    	{result = Indexacion.new(val[0], val[2])}
+			| Expresion'<' Expresion			    {result = MenorQue.new(val[0], val[2])}
+			| Expresion '<=' Expresion			{result = MenorIgualQue.new(val[0], val[2])}
+			| Expresion'>' Expresion	    		{result = MayorQue.new(val[0], val[2])}
+			| Expresion'>=' Expresion			{result = MayorIgualQue.new(val[0], val[2])}
+			| Expresion '=' Expresion		    	{result = Igualdad.new(val[0], val[2])}
+			| Expresion'/=' Expresion			{result = Desigual.new(val[0], val[2])}
 			| Asignacion						{result = val[0]}
 			;
 
