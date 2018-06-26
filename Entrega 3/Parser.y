@@ -159,7 +159,7 @@ class Parser
 
 		IteracionDet
 			: 'for' Id 'from' Expresion 'to' Expresion '->' Instrucciones 'end'							{result = IteracionDet.new(val[1], val[3], val[5], val[7], nil)}
-			| 'for' Id 'from' Expresion 'to' Expresion 'step' Expresion '->' Instrucciones 'end'		{result = IteracionDet.new(val[1], val[3], val[5], val[9], val[7])}
+			| 'for' Id 'from' Expresion 'to' Expresion 'step' Expresion '->' Instrucciones 'end'		{result = IteracionDetStep.new(val[1], val[3], val[5], val[9], val[7])}
 			;
 
 		Entrada
