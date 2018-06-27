@@ -1,0 +1,3 @@
+chmod +x BasicTran
+racc -v -o Parser.rb Parser.y
+ruby Lenguaje.rb $1
