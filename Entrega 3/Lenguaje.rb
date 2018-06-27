@@ -9,6 +9,7 @@
 
 require_relative 'Lexer'
 require_relative 'Parser'  
+require_relative 'crearTabla'  
 
 
 #main: Procedimiento que capta el archivo a ser analizado y llama al lexer
@@ -36,9 +37,17 @@ def main
             ast = parser.parse       
    
             if ast.nil? == false
-          
-                ast.print_ast
-            end 
+                    generador = CrearTabla.new
+                    astAux = ast 
+                    tablas = generador.crear(astAux)
+                    if tablas.class == Array
+                        tablas.each do |e|
+                            puts e
+                        end
+                    else
+                        ast.print_ast_tabla(tablas)
+                    end
+            end       
         end
         
 end 

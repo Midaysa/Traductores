@@ -93,15 +93,19 @@ class Parser
 			;
 
 		Bloque
-			: 'with' ListaDeclaraciones 'begin' Instrucciones 'end'		{result = Bloque.new(val[1], val[3])} 
+			: 'with'  Declaraciones'begin' Instrucciones 'end'		{result = Bloque.new(val[1], val[3])} 
 			| 'begin' Instrucciones 'end'								{result = Bloque.new(nil, val[1])}
 			;
 
-		ListaDeclaraciones
-			: Declaracion 												{result = DeclaracionesList.new(val[0], nil)}	
-			| Declaracion   ListaDeclaraciones					 	{result = DeclaracionesList.new(val[0], val[2])}
+		Declaraciones
+			: Declaracion  Declaraciones				 		{if val[2].nil?
+													            			result = [val[0]]
+																	    else
+																	        result = [val[0]] + val[2]
+																        end}
+           	|																		{result = nil}																        
+  
 			;
-			
 
 		Declaracion   
 			: 'var' ListaId ':' Tipo						            {result = Declaracion.new(val[1], val[3]) }
@@ -117,7 +121,7 @@ class Parser
 		ListaId
 			: Id ',' ListaId			            {result = ListaIdentificadores.new(val[0], nil , val[2])  }
 			| Id '<-' Expresion ',' ListaId	        {result = ListaIdentificadores.new(val[0], val[2], val[4])}
-			| Id 								    {result = ListaIdentificadores.new(val[0], nil, nil)}
+			| Id 								    {result = val[0]}
 			| Id '<-' Expresion 			    	{result = ListaIdentificadores.new(val[0], val[2], nil)}
 			;
 
@@ -133,9 +137,13 @@ class Parser
 			;
 			
 		Instrucciones
-			: Instruccion				    		{result = ListaIns.new(val[0], nil)}
-			| Instruccion Instrucciones		    	{result = ListaIns.new(val[0], val[1]) }
-			;
+		        : Instruccion Instrucciones                         {result = [val[0]] + val[1]     }
+		        | Instruccion 										{result = [val[0]]      }
+		        ;
+
+
+
+
 
 		Instruccion
 			: Asignacion ';'						    {result = Instruccion.new(val[0])}

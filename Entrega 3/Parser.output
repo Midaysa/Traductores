@@ -25,10 +25,10 @@ state 114 contains 1 shift/reduce conflicts
 -------- Grammar --------
 
 rule 1 S: Bloque
-rule 2 Bloque: "with" ListaDeclaraciones "begin" Instrucciones "end"
+rule 2 Bloque: "with" Declaraciones "begin" Instrucciones "end"
 rule 3 Bloque: "begin" Instrucciones "end"
-rule 4 ListaDeclaraciones: Declaracion
-rule 5 ListaDeclaraciones: Declaracion ListaDeclaraciones
+rule 4 Declaraciones: Declaracion Declaraciones
+rule 5 Declaraciones: 
 rule 6 Declaracion: "var" ListaId ":" Tipo
 rule 7 Tipo: "int"
 rule 8 Tipo: "bool"
@@ -42,8 +42,8 @@ rule 15 Asignacion: Id "<-" Expresion
 rule 16 Asignacion: Id ListaCorchetes "=" Expresion
 rule 17 ListaCorchetes: "[" Expresion "]"
 rule 18 ListaCorchetes: "[" Expresion "]" ListaCorchetes
-rule 19 Instrucciones: Instruccion
-rule 20 Instrucciones: Instruccion Instrucciones
+rule 19 Instrucciones: Instruccion Instrucciones
+rule 20 Instrucciones: Instruccion
 rule 21 Instruccion: Asignacion ";"
 rule 22 Instruccion: Bloque
 rule 23 Instruccion: Condicional
@@ -103,14 +103,14 @@ rule 65 Id: "tkid"
   Bloque (60)
     on right: 1 22
     on left : 2 3
-  ListaDeclaraciones (61)
-    on right: 2 5
+  Declaraciones (61)
+    on right: 2 4
     on left : 4 5
   Instrucciones (62)
-    on right: 2 3 20 28 29 30 31 32
+    on right: 2 3 19 28 29 30 31 32
     on left : 19 20
   Declaracion (63)
-    on right: 4 5
+    on right: 4
     on left : 6
   ListaId (64)
     on right: 6 11 12
@@ -239,11 +239,12 @@ state 2
 
 state 3
 
-   2) Bloque : "with" _ ListaDeclaraciones "begin" Instrucciones "end"
+   2) Bloque : "with" _ Declaraciones "begin" Instrucciones "end"
 
   "var"         shift, and go to state 8
+  $default      reduce using rule 5 (Declaraciones)
 
-  ListaDeclaraciones  go to state 6
+  Declaraciones  go to state 6
   Declaracion   go to state 7
 
 state 4
@@ -278,21 +279,20 @@ state 5
 
 state 6
 
-   2) Bloque : "with" ListaDeclaraciones _ "begin" Instrucciones "end"
+   2) Bloque : "with" Declaraciones _ "begin" Instrucciones "end"
 
   "begin"       shift, and go to state 26
 
 
 state 7
 
-   4) ListaDeclaraciones : Declaracion _
-   5) ListaDeclaraciones : Declaracion _ ListaDeclaraciones
+   4) Declaraciones : Declaracion _ Declaraciones
 
   "var"         shift, and go to state 8
-  $default      reduce using rule 4 (ListaDeclaraciones)
+  $default      reduce using rule 5 (Declaraciones)
 
   Declaracion   go to state 7
-  ListaDeclaraciones  go to state 27
+  Declaraciones  go to state 27
 
 state 8
 
@@ -322,8 +322,8 @@ state 10
 
 state 11
 
-  19) Instrucciones : Instruccion _
-  20) Instrucciones : Instruccion _ Instrucciones
+  19) Instrucciones : Instruccion _ Instrucciones
+  20) Instrucciones : Instruccion _
 
   "with"        shift, and go to state 3
   "begin"       shift, and go to state 4
@@ -333,7 +333,7 @@ state 11
   "read"        shift, and go to state 22
   "print"       shift, and go to state 23
   "tkid"        shift, and go to state 24
-  $default      reduce using rule 19 (Instrucciones)
+  $default      reduce using rule 20 (Instrucciones)
 
   Id            go to state 10
   Instruccion   go to state 11
@@ -488,7 +488,7 @@ state 25
 
 state 26
 
-   2) Bloque : "with" ListaDeclaraciones "begin" _ Instrucciones "end"
+   2) Bloque : "with" Declaraciones "begin" _ Instrucciones "end"
 
   "with"        shift, and go to state 3
   "begin"       shift, and go to state 4
@@ -512,9 +512,9 @@ state 26
 
 state 27
 
-   5) ListaDeclaraciones : Declaracion ListaDeclaraciones _
+   4) Declaraciones : Declaracion Declaraciones _
 
-  $default      reduce using rule 5 (ListaDeclaraciones)
+  $default      reduce using rule 4 (Declaraciones)
 
 
 state 28
@@ -593,9 +593,9 @@ state 33
 
 state 34
 
-  20) Instrucciones : Instruccion Instrucciones _
+  19) Instrucciones : Instruccion Instrucciones _
 
-  $default      reduce using rule 20 (Instrucciones)
+  $default      reduce using rule 19 (Instrucciones)
 
 
 state 35
@@ -921,7 +921,7 @@ state 54
 
 state 55
 
-   2) Bloque : "with" ListaDeclaraciones "begin" Instrucciones _ "end"
+   2) Bloque : "with" Declaraciones "begin" Instrucciones _ "end"
 
   "end"         shift, and go to state 88
 
@@ -1675,7 +1675,7 @@ state 87
 
 state 88
 
-   2) Bloque : "with" ListaDeclaraciones "begin" Instrucciones "end" _
+   2) Bloque : "with" Declaraciones "begin" Instrucciones "end" _
 
   $default      reduce using rule 2 (Bloque)
 

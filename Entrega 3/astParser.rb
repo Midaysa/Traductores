@@ -1,4 +1,4 @@
-# astParser.rb
+ # astParser.rb
 #
 # Descripcion: Archivo que contiene las clases usadas para crear el arbol 
 # sintactico abstracto correspondiente a las frases del lenguaje BasicTran
@@ -18,8 +18,8 @@ class AST
         attrs.each do |a|
             a.print_ast_tabla(tabla, indent + "      ")if a.respond_to? :print_ast
         end
-    end	
-	 
+    end 
+     
     def set_line l
         @line=l
     end
@@ -42,7 +42,6 @@ class S < AST
         @bloque.print_ast
     end
     def print_ast_tabla(tabla, indent = "")
-        puts "#{indent}Tipo: #{self.class}"
         @bloque.print_ast_tabla(tabla.hijo[0])
     end
 end
@@ -50,71 +49,53 @@ end
 # Clase que contiene las declaraciones e instrucciones
 class Bloque < AST
     attr_accessor :declaraciones, :instrucciones
-
     def initialize d, i
         @declaraciones = d  
         @instrucciones = i  
     end
     def print_ast indent = ""
-        if @declaraciones.nil? == false
-            @declaraciones.print_ast indent + "    " if @declaraciones.respond_to? :print_ast
+         if @declaraciones.nil? == false
+            @declaraciones.each do |d|
+                d.print_ast indent + "    " if d.respond_to? :print_ast
+            end
         end
-        puts "#{indent}     SECUENCIACION"
-        
+        puts "#{indent}    Instrucciones"
         if @instrucciones.nil? == false
-            @instrucciones.print_ast indent + "    " if @instrucciones.respond_to? :print_ast  
-        end 
+            @instrucciones.each do |i|
+                i.print_ast indent + "    " if i.respond_to? :print_ast
+            end
+        end
+        puts "#{indent}End"     #Se avisa el elemento sintáctico de cada lado
     end
-  
-    def print_ast_tabla(tabla, indent = "")  
+    def print_ast_tabla(tabla, indent = "")
           
-            if @declaraciones.nil? == false
-                tabla.printTabla(indent + "    ")
+        if @declaraciones.nil? == false 
+            tabla.printTabla(indent + "    ")
+        end
+        puts "#{indent}    Instrucciones"
+        if !@instrucciones.nil?
+            @instrucciones.each do |i|
+                i.print_ast_tabla(tabla.hijo[0], indent + "    ")
             end
-             puts "#{indent}     SECUENCIACION"
-            if  @instrucciones.nil?
-                @instrucciones.print_ast_tabla(tabla.hijo[0], indent + "    ")
-             
-            end
-            tabla.padre.hijo = tabla.padre.hijo.drop(1)
-          
-     end
+        end
+       tabla.padre.hijo = tabla.padre.hijo.drop(1)
+      
+    end
 end
 
-# Clase que contiene la(s) declaracion(es) de la(s) variable(s)
-class DeclaracionesList < AST
-    attr_accessor :declaracion, :declaraciones
-    
-    def initialize d, des
-        @declaracion = d
-        @declaraciones = des
-    end
-    def print_ast indent = ""
-        @declaracion.print_ast indent + "    " if @declaracion.respond_to? :print_ast
-        if declaraciones.nil? == false
-            @declaraciones.print_ast indent + "    " if @declaraciones.respond_to? :print_ast             
-        end        
-    end 
-
-end
-
- 
-# Clase donde se maneja la declaracion de variables   
+# Clase que contiene la(s) declaracion(es) de la(s) variable(s)class Declaracion < AST
 class Declaracion < AST
-    attr_accessor :identificador, :tipo 
-    
+    attr_accessor :identificador, :tipo
     def initialize i, t
-        @identificador = i              
-        @tipo = t 
+        @identificador = i
+        @tipo = t               
+                         
     end
-     def print_ast indent=""
-        puts "#{indent}DECLARACION"
-        @identificador.print_ast indent + "    " if @identificador.respond_to? :print_ast
-        @tipo.print_ast indent + "    " if @tipo.respond_to? :print_ast
-     end   
-end    
+end
 
-
+   
+ 
+ 
 # Clase constituida por lo contenido en la lista de identificadores 
 class ListaIdentificadores < AST
     
@@ -188,6 +169,7 @@ class AsignacionB < AST
        @id = id
        @expresion = expresion
        @expresion1 = expresion1
+
     end
     def print_ast indent = ""
         puts "#{indent}ASIGNACION ARRAY "  
@@ -233,7 +215,7 @@ class  Corchetes < AST
 
 
 end
-	
+    
  
 # Clase correspondiente al nodo de instrucciones
 class ListaIns < AST
@@ -446,6 +428,8 @@ class IteracionInd < AST
 
 end
 
+ 
+ 
 
 class IteracionDet < AST
     attr_accessor :identificador, :limInf, :limSup, :instrucciones, :iterador 
@@ -543,37 +527,6 @@ class IteracionDetStep < AST
         @instrucciones.print_ast_tabla(tabla, indent + "    " )  if @instrucciones.respond_to? :print_ast   
     end 
 
-end
-
-
-# Clase para las iteraciones determinadas que tienen el paso del iterador
-class IteracionDetStep < AST
-    attr_accessor :identificador, :limInf, :limSup, :instrucciones, :iterador 
-    
-    def initialize ident, li, ls, ins, iter
-        @identificador = ident
-        @limInf = li
-        @limSup = ls
-        @instrucciones = ins
-        @iterador = iter
-    end
-    def print_ast indent = ""
-        puts "#{indent} ITERACION DETERMINADA"
-        puts "#{indent}     identificador:"
-        @identificador.print_ast indent + "      " if @identificador.respond_to? :print_ast
-
-        puts "#{indent}     limite inferior:"
-        @limInf.print_ast indent + "      " if @limInf.respond_to? :print_ast
-        
-        puts "#{indent}     limite superior:"
-        @limSup.print_ast indent + "      " if @limSup.respond_to? :print_ast
-    
-        if @iterador.nil? == false
-            puts "#{indent}     paso de iteracion:"
-            @iterador.print_ast indent + "      " if @iterador.respond_to? :print_ast
-        end
-        @instrucciones.print_ast indent + "      " if @instrucciones.respond_to? :print_ast   
-    end    
 end
 
 
