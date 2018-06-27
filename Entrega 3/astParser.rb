@@ -143,7 +143,6 @@ class AsignacionB < AST
        @id = id
        @expresion = expresion
        @expresion1 = expresion1
-
     end
     def print_ast indent = ""
         puts "#{indent}ASIGNACION ARRAY "  

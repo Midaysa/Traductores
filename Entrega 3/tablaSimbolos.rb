@@ -70,11 +70,12 @@ class TablaSimbolos
     
 end
 
+
 #Variables globales
 $tablaInicial = TablaSimbolos.new
 $tablaErrores = Array.new
 
-class crearTabla
+class CrearTabla
     
     #Funcion para crear las tablas y verificar si hay errores
     def crear(arbol)
@@ -274,7 +275,7 @@ class crearTabla
 
     #Funcion que se encarga de verificar la instruccion condicional
     def verificarInstruccionCondicional(instruccion, tablaActual)
-        #Se busca en los alcances hasta encontrar la primera expredion valida
+        #Se busca en los alcances hasta encontrar la primera expresion valida
         tablaAux = tablaActual
         guardia = verificarExpresion(instruccion.guardia, tablaAux)
 
@@ -301,7 +302,7 @@ class crearTabla
 
     #Funcion que se encarga de verificar la instruccion condicionalOth
     def verificarInstruccionCondicionalOthe(instruccion, tablaActual)
-        #Se busca en los alcances hasta encontrar la primera expredion valida
+        #Se busca en los alcances hasta encontrar la primera expresion valida
         tablaAux = tablaActual
         guardia = verificarExpresion(instruccion.guardia, tablaAux)
 
@@ -337,16 +338,12 @@ class crearTabla
 
         #Se inserta la variable de iteracion en la tabla de simbolos actual
         tablaActual.insertar(instruccion.identificador.token.valor, "tkid")
-        limiteInferior = verificarLiteral(instruccion.limInf)
-        limiteSuperior = verificarLiteral(instruccion.limSup)
+        verificarExpresion(instruccion.limInf)
+        verificarExpresion(instruccion.limSup)
         verificarInstruccion(instruccion.instruccion, tablaActual)
     end
 
-    #
-    #           OJO CON ESTO
-    #AQUI SE DEBE MODIFICAR PARA ESTE NODO EL NOMBRE DE IteracionDet A IteracionDetStep
-    #
-    #
+
     #Funcion que se encarga de verificar la instruccion del tipo IteracionDetStep
     def verificarIteracionDetStep(instruccion, tablaPadre)
         #Se crea la tabla para el manejo del for
@@ -357,9 +354,9 @@ class crearTabla
 
         #Se inserta la variable de iteracion en la tabla de simbolos actual
         tablaActual.insertar(instruccion.identificador.token.valor, "tkid")
-        limiteInferior = verificarLiteral(instruccion.limInf)
-        limiteSuperior = verificarLiteral(instruccion.limSup)
-        pasoDeIteracion = verificarLiteral(instruccion.iterador)
+        verificarExpresion(instruccion.limInf)
+        verificarExpresion(instruccion.limSup)
+        verificarExpresion(instruccion.iterador)
         verificarInstruccion(instruccion.instruccion, tablaActual)
     end
 
@@ -380,7 +377,7 @@ class crearTabla
             while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
                 tokenAux = tokenAux.izquierda
             end                
-            error = "Error en línea #{tokenAUX.token.linea}: el tipo de la expresion '#{tokenAUX.token.valor}' no esta en el alcance."
+            error = "Error en línea #{tokenAux.token.linea}: el tipo de la expresion '#{tokenAux.token.valor}' no esta en el alcance."
             $errorTabla << error            
         end 
     end
@@ -402,10 +399,10 @@ class crearTabla
             while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
                 tokenAux = tokenAux.izquierda
             end                
-            error = "Error en línea #{tokenAUX.token.linea}: el tipo de la expresion '#{tokenAUX.token.valor}' no esta en el alcance."
+            error = "Error en línea #{tokenAux.token.linea}: el tipo de la expresion '#{tokenAux.token.valor}' no esta en el alcance."
             $errorTabla << error            
         end 
-    end
+    end 
 
 
     #Funcion que se encarga de analizar el tipo de expresion a evaluar
@@ -448,6 +445,9 @@ class crearTabla
 
         when MenorIgualQue
             return verificarMenorIgualQue(expresion, tablaActual)
+            
+        when MayorQue
+            return verificarMayorQue(expresion, tablaActual)
             
         when MayorIgualQue
             return verificarMayorIgualQue(expresion, tablaActual)
@@ -497,6 +497,841 @@ class crearTabla
     end
 
 
-    #Funcion que se encarga de verificar 
+    #Funcion que se encarga de verificar las operaciones PuntoParser 
+    def verificarPuntoParser(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion PUNTO son diferentes"
+            $errorTabla << error
+        end
+    end
+
+
+    #Funcion que se encarga de verificar la operacion Sumar 
+    def verificarSumar(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion SUMAR son diferentes"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion Restar 
+    def verificarRestar(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion RESTAR son diferentes"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion Multiplicacion 
+    def verificarMultiplicacion(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MULTIPLICACION son diferentes"
+            $errorTabla << error
+        end
+    end   
+    
+
+    #Funcion que se encarga de verificar la operacion Division 
+    def verificarDivision(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DIVISION son diferentes"
+            $errorTabla << error
+        end
+    end
+
+
+    #Funcion que se encarga de verificar la operacion Modulo 
+    def verificarModulo(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MODULO son diferentes"
+            $errorTabla << error
+        end
+    end 
+    
+    
+    #Funcion que se encarga de verificar la operacion Or (Disyuncion)
+    def verificarOr(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "bool" and derecha.eql? "bool") then
+            return "bool"
+        else 
+            if !(izquierda.eql? "bool") then 
+                tokenAux = expresion.izquierda
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DISYUNCION son diferentes"
+                $errorTabla << error
+            else 
+                tokenAux = expresion.derecha
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DISYUNCION son diferentes"
+                $errorTabla << error
+            end
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion And (Conjuncion)
+    def verificarAnd(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "bool" and derecha.eql? "bool") then
+            return "bool"
+        else 
+            if !(izquierda.eql? "bool") then 
+                tokenAux = expresion.izquierda
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONJUNCION son diferentes"
+                $errorTabla << error
+            else 
+                tokenAux = expresion.derecha
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONJUNCION son diferentes"
+                $errorTabla << error
+            end
+        end
+    end 
+    
+    
+    
+    #
+    #
+    #       En este caso considero que se debe hacer un tipo 'array'
+    #                para los tipos de datos de declaracion
+    #
+    #
+    #Funcion que se encarga de verificar la operacion Concatenar
+    def verificarConcatenar(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "array" and derecha.eql? "array") then
+            return "array"
+        else 
+            if !(izquierda.eql? "array") then 
+                tokenAux = expresion.izquierda
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
+                $errorTabla << error
+            else 
+                tokenAux = expresion.derecha
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
+                $errorTabla << error
+            end
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion Indexacion
+    def verificarIndexacion(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "array" and derecha.eql? "int") then
+            return "int"
+        else 
+            if !(izquierda.eql? "array") then 
+                tokenAux = expresion.izquierda
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
+                $errorTabla << error
+            else 
+                tokenAux = expresion.derecha
+                
+                while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                    tokenAux = tokenAux.izquierda
+                end
+                error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
+                $errorTabla << error
+            end
+        end
+    end
+
+
+    #Funcion que se encarga de verificar la operacion MenorQue
+    def verificarMenorQue(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MENOR QUE son diferentes"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion MenorIgualQue
+    def verificarMenorIgualQue(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MENOR IGUAL QUE son diferentes"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion MayorQue
+    def verificarMayorQue(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MAYOR QUE son diferentes"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion MayorIgualQue
+    def verificarMayorIgualQue(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? "int" and derecha.eql? "int") then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MAYOR IGUAL QUE son diferentes"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion Igualdad
+    def verificarIgualdad(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? derecha) then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion IGUALDAD son diferentes"
+            $errorTabla << error
+        end
+    end    
+
+
+    #Funcion que se encarga de verificar la operacion Desigual
+    def verificarDesigual(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a derecha
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.derecha, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.derecha, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end        
+        
+        #Se verifica si ambas variables son de tipo int
+        if (izquierda.eql? derecha) then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DESIGUAL son diferentes"
+            $errorTabla << error
+        end
+    end
+
+    
+    #Funcion que se encarga de verificar la operacion Negativo (Menos unario)
+    def verificarNegativo(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        expr = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!expr and !tablaAux.nil?)
+            expr = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Se verifica si la variable es de tipo int
+        if (expr.eql? "int") then
+            return "int"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion NEGATIVO no es bool"
+            $errorTabla << error
+        end
+    end
+
+
+    #Funcion que se encarga de verificar la operacion Not
+    def verificarNot(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        expr = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!expr and !tablaAux.nil?)
+            expr = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Se verifica si la variable es de tipo bool
+        if (expr.eql? "bool") then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion NOT no es bool"
+            $errorTabla << error
+        end
+    end
+    
+
+    #Funcion que se encarga de verificar la operacion CaracterSiguiente
+    def verificarCaracterSiguiente(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        expr = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!expr and !tablaAux.nil?)
+            expr = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Se verifica si la variable es de tipo bool
+        if (expr.eql? "tkcaracter") then
+            return "tkcaracter"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion CARACTER SIGUIENTE no es caracter"
+            $errorTabla << error
+        end
+    end
+    
+    
+    #Funcion que se encarga de verificar la operacion CaracterAnterior
+    def verificarCaracterAnterior(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        expr = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!expr and !tablaAux.nil?)
+            expr = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Se verifica si la variable es de tipo bool
+        if (expr.eql? "tkcaracter") then
+            return "tkcaracter"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion CARACTER ANTERIOR no es caracter"
+            $errorTabla << error
+        end
+    end
+    
+
+    #Funcion que se encarga de verificar la operacion ValorAsciiParser
+    def verificarValorAsciiParser(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        expr = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!expr and !tablaAux.nil?)
+            expr = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Se verifica si la variable es de tipo bool
+        if (expr.eql? "tkcaracter") then
+            return "tkcaracter"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion VALOR ASCII no es caracter"
+            $errorTabla << error
+        end
+    end
+    
+
+    #Funcion que se encarga de verificar la operacion ShiftParser
+    def verificarShiftParser(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        expr = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!expr and !tablaAux.nil?)
+            expr = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Se verifica si la variable es de tipo bool
+        if (expr.eql? "array") then
+            return "array"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion SHIFT no es array"
+            $errorTabla << error
+        end
+    end
+
+
+    #Funcion que se encarga de verificar la operacion AsignacionA
+    def verificarAsignacionA(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.id, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se verifica si la variables son del mismo tipo
+        if (izquierda.eql? derecha) then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo de la variable no coincide con la del valor que se le va a asignar"
+            $errorTabla << error
+        end
+    end
+    
+    #Funcion que se encarga de verificar la operacion AsignacionB
+    def verificarAsignacionB(expresion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        izquierda = verificarExpresion(expresion.id, tablaAux)
+        
+        while (!izquierda and !tablaAux.nil?)
+            izquierda = verificarExpresion(expresion.izquierda, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se busca en los alcances hasta encontrar la primera expresion valida a izquierda
+        tablaAux = tablaActual
+        derecha = verificarExpresion(expresion.expresion, tablaAux)
+        
+        while (!derecha and !tablaAux.nil?)
+            derecha = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+        
+        #Se verifica si la variables son del mismo tipo
+        if (izquierda.eql? derecha) then
+            return "bool"
+        else 
+            tokenAux = expresion.izquierda
+            
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+            error = "Error en línea #{tokenAux.token.linea}: el tipo de la variable no coincide con la del valor que se le va a asignar"
+            $errorTabla << error
+        end
+    end    
 
 end
