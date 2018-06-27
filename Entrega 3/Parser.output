@@ -1,3 +1,25 @@
+state 38 contains 1 shift/reduce conflicts
+state 59 contains 18 shift/reduce conflicts
+state 81 contains 1 shift/reduce conflicts
+state 83 contains 1 shift/reduce conflicts
+state 84 contains 1 shift/reduce conflicts
+state 85 contains 1 shift/reduce conflicts
+state 96 contains 1 shift/reduce conflicts
+state 99 contains 18 shift/reduce conflicts
+state 100 contains 1 shift/reduce conflicts
+state 101 contains 1 shift/reduce conflicts
+state 102 contains 1 shift/reduce conflicts
+state 103 contains 1 shift/reduce conflicts
+state 104 contains 1 shift/reduce conflicts
+state 105 contains 1 shift/reduce conflicts
+state 106 contains 1 shift/reduce conflicts
+state 107 contains 1 shift/reduce conflicts
+state 109 contains 1 shift/reduce conflicts
+state 110 contains 1 shift/reduce conflicts
+state 111 contains 1 shift/reduce conflicts
+state 112 contains 1 shift/reduce conflicts
+state 113 contains 1 shift/reduce conflicts
+state 114 contains 1 shift/reduce conflicts
 
 
 -------- Grammar --------
@@ -6,7 +28,7 @@ rule 1 S: Bloque
 rule 2 Bloque: "with" ListaDeclaraciones "begin" Instrucciones "end"
 rule 3 Bloque: "begin" Instrucciones "end"
 rule 4 ListaDeclaraciones: Declaracion
-rule 5 ListaDeclaraciones: Declaracion "," ListaDeclaraciones
+rule 5 ListaDeclaraciones: Declaracion ListaDeclaraciones
 rule 6 Declaracion: "var" ListaId ":" Tipo
 rule 7 Tipo: "int"
 rule 8 Tipo: "bool"
@@ -30,7 +52,7 @@ rule 25 Instruccion: IteracionDet
 rule 26 Instruccion: Entrada ";"
 rule 27 Instruccion: Salida ";"
 rule 28 Condicional: "if" Expresion "->" Instrucciones "end"
-rule 29 Condicional: "if" Expresion "->" Instrucciones "otherwise" Instrucciones "end"
+rule 29 Condicional: "if" Expresion "->" Instrucciones "otherwise" "->" Instrucciones "end"
 rule 30 IteracionInd: "while" Expresion "->" Instrucciones "end"
 rule 31 IteracionDet: "for" Id "from" Expresion "to" Expresion "->" Instrucciones "end"
 rule 32 IteracionDet: "for" Id "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
@@ -39,27 +61,27 @@ rule 34 Salida: "print" Expresion
 rule 35 Expresion: Literal
 rule 36 Expresion: "-" Expresion
 rule 37 Expresion: "(" Expresion ")"
-rule 38 Expresion: Literal "." Expresion
-rule 39 Expresion: Literal "+" Expresion
-rule 40 Expresion: Literal "-" Expresion
-rule 41 Expresion: Literal "*" Expresion
-rule 42 Expresion: Literal "/" Expresion
-rule 43 Expresion: Literal "%" Expresion
-rule 44 Expresion: Literal "\\/" Expresion
-rule 45 Expresion: Literal "/\\" Expresion
+rule 38 Expresion: Expresion "." Expresion
+rule 39 Expresion: Expresion "+" Expresion
+rule 40 Expresion: Expresion "-" Expresion
+rule 41 Expresion: Expresion "*" Expresion
+rule 42 Expresion: Expresion "/" Expresion
+rule 43 Expresion: Expresion "%" Expresion
+rule 44 Expresion: Expresion "\\/" Expresion
+rule 45 Expresion: Expresion "/\\" Expresion
 rule 46 Expresion: "not" Expresion
-rule 47 Expresion: Literal "++"
-rule 48 Expresion: Literal "--"
+rule 47 Expresion: Expresion "++"
+rule 48 Expresion: Expresion "--"
 rule 49 Expresion: "#" Expresion
-rule 50 Expresion: Literal "::" Expresion
+rule 50 Expresion: Expresion "::" Expresion
 rule 51 Expresion: "$" Expresion
-rule 52 Expresion: Id "[" Expresion "]"
-rule 53 Expresion: Literal "<" Expresion
-rule 54 Expresion: Literal "<=" Expresion
-rule 55 Expresion: Literal ">" Expresion
-rule 56 Expresion: Literal ">=" Expresion
-rule 57 Expresion: Literal "=" Expresion
-rule 58 Expresion: Literal "/=" Expresion
+rule 52 Expresion: Expresion "[" Expresion "]"
+rule 53 Expresion: Expresion "<" Expresion
+rule 54 Expresion: Expresion "<=" Expresion
+rule 55 Expresion: Expresion ">" Expresion
+rule 56 Expresion: Expresion ">=" Expresion
+rule 57 Expresion: Expresion "=" Expresion
+rule 58 Expresion: Expresion "/=" Expresion
 rule 59 Expresion: Asignacion
 rule 60 Literal: Id
 rule 61 Literal: "tknum"
@@ -97,10 +119,10 @@ rule 65 Id: "tkid"
     on right: 6 10
     on left : 7 8 9 10
   Expresion (66)
-    on right: 10 12 14 15 16 17 18 28 29 30 31 32 34 36 37 38 39 40 41 42 43 44 45 46 49 50 51 52 53 54 55 56 57 58
+    on right: 10 12 14 15 16 17 18 28 29 30 31 32 34 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58
     on left : 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59
   Id (67)
-    on right: 11 12 13 14 15 16 31 32 33 52 60
+    on right: 11 12 13 14 15 16 31 32 33 60
     on left : 65
   Asignacion (68)
     on right: 21 59
@@ -127,7 +149,7 @@ rule 65 Id: "tkid"
     on right: 27
     on left : 34
   Literal (76)
-    on right: 35 38 39 40 41 42 43 44 45 47 48 50 53 54 55 56 57 58
+    on right: 35
     on left : 60 61 62 63 64
 
 **Terminals, with rules where they appear
@@ -155,12 +177,12 @@ rule 65 Id: "tkid"
   "\\/" (20) 44
   "/\\" (21) 45
   "not" (22) 46
-  "<" (23) 53
-  "<=" (24) 54
-  ">" (25) 55
-  ">=" (26) 56
-  "=" (27) 16 57
-  "/=" (28) 58
+  "=" (23) 16 57
+  "/=" (24) 58
+  ">=" (25) 56
+  "<=" (26) 54
+  ">" (27) 55
+  "<" (28) 53
   "with" (29) 2
   "begin" (30) 2 3
   "end" (31) 2 3 28 29 30 31 32
@@ -179,7 +201,7 @@ rule 65 Id: "tkid"
   "step" (44) 32
   "read" (45) 33
   "print" (46) 34
-  "," (47) 5 11 12
+  "," (47) 11 12
   "." (48) 38
   ";" (49) 21 26 27
   ":" (50) 6
@@ -264,11 +286,13 @@ state 6
 state 7
 
    4) ListaDeclaraciones : Declaracion _
-   5) ListaDeclaraciones : Declaracion _ "," ListaDeclaraciones
+   5) ListaDeclaraciones : Declaracion _ ListaDeclaraciones
 
-  ","           shift, and go to state 27
+  "var"         shift, and go to state 8
   $default      reduce using rule 4 (ListaDeclaraciones)
 
+  Declaracion   go to state 7
+  ListaDeclaraciones  go to state 27
 
 state 8
 
@@ -374,7 +398,7 @@ state 18
 state 19
 
   28) Condicional : "if" _ Expresion "->" Instrucciones "end"
-  29) Condicional : "if" _ Expresion "->" Instrucciones "otherwise" Instrucciones "end"
+  29) Condicional : "if" _ Expresion "->" Instrucciones "otherwise" "->" Instrucciones "end"
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -488,18 +512,16 @@ state 26
 
 state 27
 
-   5) ListaDeclaraciones : Declaracion "," _ ListaDeclaraciones
+   5) ListaDeclaraciones : Declaracion ListaDeclaraciones _
 
-  "var"         shift, and go to state 8
+  $default      reduce using rule 5 (ListaDeclaraciones)
 
-  Declaracion   go to state 7
-  ListaDeclaraciones  go to state 56
 
 state 28
 
    6) Declaracion : "var" ListaId _ ":" Tipo
 
-  ":"           shift, and go to state 57
+  ":"           shift, and go to state 56
 
 
 state 29
@@ -509,8 +531,8 @@ state 29
   13) ListaId : Id _
   14) ListaId : Id _ "<-" Expresion
 
-  ","           shift, and go to state 58
-  "<-"          shift, and go to state 59
+  ","           shift, and go to state 57
+  "<-"          shift, and go to state 58
   $default      reduce using rule 13 (ListaId)
 
 
@@ -537,7 +559,7 @@ state 31
   "tkcaracter"  shift, and go to state 48
 
   Id            go to state 38
-  Expresion     go to state 60
+  Expresion     go to state 59
   Literal       go to state 40
   Asignacion    go to state 46
 
@@ -545,7 +567,7 @@ state 32
 
   16) Asignacion : Id ListaCorchetes _ "=" Expresion
 
-  "="           shift, and go to state 61
+  "="           shift, and go to state 60
 
 
 state 33
@@ -565,7 +587,7 @@ state 33
   "tkcaracter"  shift, and go to state 48
 
   Id            go to state 38
-  Expresion     go to state 62
+  Expresion     go to state 61
   Literal       go to state 40
   Asignacion    go to state 46
 
@@ -601,10 +623,10 @@ state 38
 
   15) Asignacion : Id _ "<-" Expresion
   16) Asignacion : Id _ ListaCorchetes "=" Expresion
-  52) Expresion : Id _ "[" Expresion "]"
   60) Literal : Id _
 
-  "["           shift, and go to state 63
+  "["           shift, and go to state 33
+  "["           [reduce using rule 60 (Literal)]
   "<-"          shift, and go to state 31
   $default      reduce using rule 60 (Literal)
 
@@ -613,49 +635,51 @@ state 38
 state 39
 
   28) Condicional : "if" Expresion _ "->" Instrucciones "end"
-  29) Condicional : "if" Expresion _ "->" Instrucciones "otherwise" Instrucciones "end"
+  29) Condicional : "if" Expresion _ "->" Instrucciones "otherwise" "->" Instrucciones "end"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "->"          shift, and go to state 64
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
+  "->"          shift, and go to state 62
 
 
 state 40
 
   35) Expresion : Literal _
-  38) Expresion : Literal _ "." Expresion
-  39) Expresion : Literal _ "+" Expresion
-  40) Expresion : Literal _ "-" Expresion
-  41) Expresion : Literal _ "*" Expresion
-  42) Expresion : Literal _ "/" Expresion
-  43) Expresion : Literal _ "%" Expresion
-  44) Expresion : Literal _ "\\/" Expresion
-  45) Expresion : Literal _ "/\\" Expresion
-  47) Expresion : Literal _ "++"
-  48) Expresion : Literal _ "--"
-  50) Expresion : Literal _ "::" Expresion
-  53) Expresion : Literal _ "<" Expresion
-  54) Expresion : Literal _ "<=" Expresion
-  55) Expresion : Literal _ ">" Expresion
-  56) Expresion : Literal _ ">=" Expresion
-  57) Expresion : Literal _ "=" Expresion
-  58) Expresion : Literal _ "/=" Expresion
 
-  "::"          shift, and go to state 75
-  "++"          shift, and go to state 73
-  "--"          shift, and go to state 74
-  "+"           shift, and go to state 66
-  "-"           shift, and go to state 67
-  "*"           shift, and go to state 68
-  "/"           shift, and go to state 69
-  "%"           shift, and go to state 70
-  "\\/"         shift, and go to state 71
-  "/\\"         shift, and go to state 72
-  "<"           shift, and go to state 76
-  "<="          shift, and go to state 77
-  ">"           shift, and go to state 78
-  ">="          shift, and go to state 79
-  "="           shift, and go to state 80
-  "/="          shift, and go to state 81
-  "."           shift, and go to state 65
   $default      reduce using rule 35 (Expresion)
 
 
@@ -676,7 +700,7 @@ state 41
 
   Id            go to state 38
   Literal       go to state 40
-  Expresion     go to state 82
+  Expresion     go to state 81
   Asignacion    go to state 46
 
 state 42
@@ -696,7 +720,7 @@ state 42
 
   Id            go to state 38
   Literal       go to state 40
-  Expresion     go to state 83
+  Expresion     go to state 82
   Asignacion    go to state 46
 
 state 43
@@ -716,7 +740,7 @@ state 43
 
   Id            go to state 38
   Literal       go to state 40
-  Expresion     go to state 84
+  Expresion     go to state 83
   Asignacion    go to state 46
 
 state 44
@@ -736,7 +760,7 @@ state 44
 
   Id            go to state 38
   Literal       go to state 40
-  Expresion     go to state 85
+  Expresion     go to state 84
   Asignacion    go to state 46
 
 state 45
@@ -756,7 +780,7 @@ state 45
 
   Id            go to state 38
   Literal       go to state 40
-  Expresion     go to state 86
+  Expresion     go to state 85
   Asignacion    go to state 46
 
 state 46
@@ -797,8 +821,44 @@ state 50
 state 51
 
   30) IteracionInd : "while" Expresion _ "->" Instrucciones "end"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "->"          shift, and go to state 87
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
+  "->"          shift, and go to state 86
 
 
 state 52
@@ -806,7 +866,7 @@ state 52
   31) IteracionDet : "for" Id _ "from" Expresion "to" Expresion "->" Instrucciones "end"
   32) IteracionDet : "for" Id _ "from" Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
 
-  "from"        shift, and go to state 88
+  "from"        shift, and go to state 87
 
 
 state 53
@@ -819,7 +879,43 @@ state 53
 state 54
 
   34) Salida : "print" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
   $default      reduce using rule 34 (Salida)
 
 
@@ -827,37 +923,30 @@ state 55
 
    2) Bloque : "with" ListaDeclaraciones "begin" Instrucciones _ "end"
 
-  "end"         shift, and go to state 89
+  "end"         shift, and go to state 88
 
 
 state 56
 
-   5) ListaDeclaraciones : Declaracion "," ListaDeclaraciones _
-
-  $default      reduce using rule 5 (ListaDeclaraciones)
-
-
-state 57
-
    6) Declaracion : "var" ListaId ":" _ Tipo
 
-  "array"       shift, and go to state 94
-  "int"         shift, and go to state 91
-  "bool"        shift, and go to state 92
-  "char"        shift, and go to state 93
+  "array"       shift, and go to state 93
+  "int"         shift, and go to state 90
+  "bool"        shift, and go to state 91
+  "char"        shift, and go to state 92
 
-  Tipo          go to state 90
+  Tipo          go to state 89
 
-state 58
+state 57
 
   11) ListaId : Id "," _ ListaId
 
   "tkid"        shift, and go to state 24
 
   Id            go to state 29
-  ListaId       go to state 95
+  ListaId       go to state 94
 
-state 59
+state 58
 
   12) ListaId : Id "<-" _ Expresion "," ListaId
   14) ListaId : Id "<-" _ Expresion
@@ -873,19 +962,73 @@ state 59
   "tknum"       shift, and go to state 47
   "tkcaracter"  shift, and go to state 48
 
-  Expresion     go to state 96
+  Expresion     go to state 95
   Id            go to state 38
   Literal       go to state 40
   Asignacion    go to state 46
 
-state 60
+state 59
 
   15) Asignacion : Id "<-" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
+  "["           shift, and go to state 74
+  "["           [reduce using rule 15 (Asignacion)]
+  "::"          shift, and go to state 73
+  "::"          [reduce using rule 15 (Asignacion)]
+  "++"          shift, and go to state 71
+  "++"          [reduce using rule 15 (Asignacion)]
+  "--"          shift, and go to state 72
+  "--"          [reduce using rule 15 (Asignacion)]
+  "+"           shift, and go to state 64
+  "+"           [reduce using rule 15 (Asignacion)]
+  "-"           shift, and go to state 65
+  "-"           [reduce using rule 15 (Asignacion)]
+  "*"           shift, and go to state 66
+  "*"           [reduce using rule 15 (Asignacion)]
+  "/"           shift, and go to state 67
+  "/"           [reduce using rule 15 (Asignacion)]
+  "%"           shift, and go to state 68
+  "%"           [reduce using rule 15 (Asignacion)]
+  "\\/"         shift, and go to state 69
+  "\\/"         [reduce using rule 15 (Asignacion)]
+  "/\\"         shift, and go to state 70
+  "/\\"         [reduce using rule 15 (Asignacion)]
+  "="           shift, and go to state 79
+  "="           [reduce using rule 15 (Asignacion)]
+  "/="          shift, and go to state 80
+  "/="          [reduce using rule 15 (Asignacion)]
+  ">="          shift, and go to state 78
+  ">="          [reduce using rule 15 (Asignacion)]
+  "<="          shift, and go to state 76
+  "<="          [reduce using rule 15 (Asignacion)]
+  ">"           shift, and go to state 77
+  ">"           [reduce using rule 15 (Asignacion)]
+  "<"           shift, and go to state 75
+  "<"           [reduce using rule 15 (Asignacion)]
+  "."           shift, and go to state 63
+  "."           [reduce using rule 15 (Asignacion)]
   $default      reduce using rule 15 (Asignacion)
 
 
-state 61
+state 60
 
   16) Asignacion : Id ListaCorchetes "=" _ Expresion
 
@@ -901,44 +1044,58 @@ state 61
   "tkcaracter"  shift, and go to state 48
 
   Id            go to state 38
-  Expresion     go to state 97
+  Expresion     go to state 96
   Literal       go to state 40
   Asignacion    go to state 46
 
-state 62
+state 61
 
   17) ListaCorchetes : "[" Expresion _ "]"
   18) ListaCorchetes : "[" Expresion _ "]" ListaCorchetes
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "]"           shift, and go to state 98
+  "["           shift, and go to state 74
+  "]"           shift, and go to state 97
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
 
 
-state 63
-
-  17) ListaCorchetes : "[" _ Expresion "]"
-  18) ListaCorchetes : "[" _ Expresion "]" ListaCorchetes
-  52) Expresion : Id "[" _ Expresion "]"
-
-  "("           shift, and go to state 42
-  "$"           shift, and go to state 45
-  "#"           shift, and go to state 44
-  "-"           shift, and go to state 41
-  "not"         shift, and go to state 43
-  "true"        shift, and go to state 49
-  "false"       shift, and go to state 50
-  "tkid"        shift, and go to state 24
-  "tknum"       shift, and go to state 47
-  "tkcaracter"  shift, and go to state 48
-
-  Id            go to state 38
-  Expresion     go to state 99
-  Literal       go to state 40
-  Asignacion    go to state 46
-
-state 64
+state 62
 
   28) Condicional : "if" Expresion "->" _ Instrucciones "end"
-  29) Condicional : "if" Expresion "->" _ Instrucciones "otherwise" Instrucciones "end"
+  29) Condicional : "if" Expresion "->" _ Instrucciones "otherwise" "->" Instrucciones "end"
 
   "with"        shift, and go to state 3
   "begin"       shift, and go to state 4
@@ -958,11 +1115,51 @@ state 64
   IteracionDet  go to state 16
   Entrada       go to state 17
   Salida        go to state 18
-  Instrucciones  go to state 100
+  Instrucciones  go to state 98
+
+state 63
+
+  38) Expresion : Expresion "." _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 99
+  Asignacion    go to state 46
+
+state 64
+
+  39) Expresion : Expresion "+" _ Expresion
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Literal       go to state 40
+  Expresion     go to state 100
+  Asignacion    go to state 46
 
 state 65
 
-  38) Expresion : Literal "." _ Expresion
+  40) Expresion : Expresion "-" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -982,7 +1179,7 @@ state 65
 
 state 66
 
-  39) Expresion : Literal "+" _ Expresion
+  41) Expresion : Expresion "*" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1002,7 +1199,7 @@ state 66
 
 state 67
 
-  40) Expresion : Literal "-" _ Expresion
+  42) Expresion : Expresion "/" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1022,7 +1219,7 @@ state 67
 
 state 68
 
-  41) Expresion : Literal "*" _ Expresion
+  43) Expresion : Expresion "%" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1042,7 +1239,7 @@ state 68
 
 state 69
 
-  42) Expresion : Literal "/" _ Expresion
+  44) Expresion : Expresion "\\/" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1062,7 +1259,7 @@ state 69
 
 state 70
 
-  43) Expresion : Literal "%" _ Expresion
+  45) Expresion : Expresion "/\\" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1082,7 +1279,21 @@ state 70
 
 state 71
 
-  44) Expresion : Literal "\\/" _ Expresion
+  47) Expresion : Expresion "++" _
+
+  $default      reduce using rule 47 (Expresion)
+
+
+state 72
+
+  48) Expresion : Expresion "--" _
+
+  $default      reduce using rule 48 (Expresion)
+
+
+state 73
+
+  50) Expresion : Expresion "::" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1100,9 +1311,9 @@ state 71
   Expresion     go to state 107
   Asignacion    go to state 46
 
-state 72
+state 74
 
-  45) Expresion : Literal "/\\" _ Expresion
+  52) Expresion : Expresion "[" _ Expresion "]"
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1120,23 +1331,9 @@ state 72
   Expresion     go to state 108
   Asignacion    go to state 46
 
-state 73
-
-  47) Expresion : Literal "++" _
-
-  $default      reduce using rule 47 (Expresion)
-
-
-state 74
-
-  48) Expresion : Literal "--" _
-
-  $default      reduce using rule 48 (Expresion)
-
-
 state 75
 
-  50) Expresion : Literal "::" _ Expresion
+  53) Expresion : Expresion "<" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1156,7 +1353,7 @@ state 75
 
 state 76
 
-  53) Expresion : Literal "<" _ Expresion
+  54) Expresion : Expresion "<=" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1176,7 +1373,7 @@ state 76
 
 state 77
 
-  54) Expresion : Literal "<=" _ Expresion
+  55) Expresion : Expresion ">" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1196,7 +1393,7 @@ state 77
 
 state 78
 
-  55) Expresion : Literal ">" _ Expresion
+  56) Expresion : Expresion ">=" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1216,7 +1413,7 @@ state 78
 
 state 79
 
-  56) Expresion : Literal ">=" _ Expresion
+  57) Expresion : Expresion "=" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1236,7 +1433,7 @@ state 79
 
 state 80
 
-  57) Expresion : Literal "=" _ Expresion
+  58) Expresion : Expresion "/=" _ Expresion
 
   "("           shift, and go to state 42
   "$"           shift, and go to state 45
@@ -1256,60 +1453,182 @@ state 80
 
 state 81
 
-  58) Expresion : Literal "/=" _ Expresion
+  36) Expresion : "-" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "("           shift, and go to state 42
-  "$"           shift, and go to state 45
-  "#"           shift, and go to state 44
-  "-"           shift, and go to state 41
-  "not"         shift, and go to state 43
-  "true"        shift, and go to state 49
-  "false"       shift, and go to state 50
-  "tkid"        shift, and go to state 24
-  "tknum"       shift, and go to state 47
-  "tkcaracter"  shift, and go to state 48
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "."           shift, and go to state 63
+  "."           [reduce using rule 36 (Expresion)]
+  $default      reduce using rule 36 (Expresion)
 
-  Id            go to state 38
-  Literal       go to state 40
-  Expresion     go to state 115
-  Asignacion    go to state 46
 
 state 82
 
-  36) Expresion : "-" Expresion _
+  37) Expresion : "(" Expresion _ ")"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 36 (Expresion)
+  ")"           shift, and go to state 115
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
 
 
 state 83
 
-  37) Expresion : "(" Expresion _ ")"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  46) Expresion : "not" Expresion _
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  ")"           shift, and go to state 116
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 46 (Expresion)]
+  $default      reduce using rule 46 (Expresion)
 
 
 state 84
 
-  46) Expresion : "not" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  49) Expresion : "#" Expresion _
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 46 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "."           shift, and go to state 63
+  "."           [reduce using rule 49 (Expresion)]
+  $default      reduce using rule 49 (Expresion)
 
 
 state 85
 
-  49) Expresion : "#" Expresion _
-
-  $default      reduce using rule 49 (Expresion)
-
-
-state 86
-
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
   51) Expresion : "$" Expresion _
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "."           shift, and go to state 63
+  "."           [reduce using rule 51 (Expresion)]
   $default      reduce using rule 51 (Expresion)
 
 
-state 87
+state 86
 
   30) IteracionInd : "while" Expresion "->" _ Instrucciones "end"
 
@@ -1331,9 +1650,9 @@ state 87
   IteracionDet  go to state 16
   Entrada       go to state 17
   Salida        go to state 18
-  Instrucciones  go to state 117
+  Instrucciones  go to state 116
 
-state 88
+state 87
 
   31) IteracionDet : "for" Id "from" _ Expresion "to" Expresion "->" Instrucciones "end"
   32) IteracionDet : "for" Id "from" _ Expresion "to" Expresion "step" Expresion "->" Instrucciones "end"
@@ -1350,76 +1669,149 @@ state 88
   "tkcaracter"  shift, and go to state 48
 
   Id            go to state 38
-  Expresion     go to state 118
+  Expresion     go to state 117
   Literal       go to state 40
   Asignacion    go to state 46
 
-state 89
+state 88
 
    2) Bloque : "with" ListaDeclaraciones "begin" Instrucciones "end" _
 
   $default      reduce using rule 2 (Bloque)
 
 
-state 90
+state 89
 
    6) Declaracion : "var" ListaId ":" Tipo _
 
   $default      reduce using rule 6 (Declaracion)
 
 
-state 91
+state 90
 
    7) Tipo : "int" _
 
   $default      reduce using rule 7 (Tipo)
 
 
-state 92
+state 91
 
    8) Tipo : "bool" _
 
   $default      reduce using rule 8 (Tipo)
 
 
-state 93
+state 92
 
    9) Tipo : "char" _
 
   $default      reduce using rule 9 (Tipo)
 
 
-state 94
+state 93
 
   10) Tipo : "array" _ "[" Expresion "]" "of" Tipo
 
-  "["           shift, and go to state 119
+  "["           shift, and go to state 118
 
 
-state 95
+state 94
 
   11) ListaId : Id "," ListaId _
 
   $default      reduce using rule 11 (ListaId)
 
 
-state 96
+state 95
 
   12) ListaId : Id "<-" Expresion _ "," ListaId
   14) ListaId : Id "<-" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  ","           shift, and go to state 120
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  ","           shift, and go to state 119
+  "."           shift, and go to state 63
   $default      reduce using rule 14 (ListaId)
 
 
-state 97
+state 96
 
   16) Asignacion : Id ListaCorchetes "=" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 16 (Asignacion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
   $default      reduce using rule 16 (Asignacion)
 
 
-state 98
+state 97
 
   17) ListaCorchetes : "[" Expresion "]" _
   18) ListaCorchetes : "[" Expresion "]" _ ListaCorchetes
@@ -1427,154 +1819,706 @@ state 98
   "["           shift, and go to state 33
   $default      reduce using rule 17 (ListaCorchetes)
 
-  ListaCorchetes  go to state 121
+  ListaCorchetes  go to state 120
+
+state 98
+
+  28) Condicional : "if" Expresion "->" Instrucciones _ "end"
+  29) Condicional : "if" Expresion "->" Instrucciones _ "otherwise" "->" Instrucciones "end"
+
+  "end"         shift, and go to state 121
+  "otherwise"   shift, and go to state 122
+
 
 state 99
 
-  17) ListaCorchetes : "[" Expresion _ "]"
-  18) ListaCorchetes : "[" Expresion _ "]" ListaCorchetes
-  52) Expresion : Id "[" Expresion _ "]"
+  38) Expresion : Expresion _ "." Expresion
+  38) Expresion : Expresion "." Expresion _
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "]"           shift, and go to state 122
+  "["           shift, and go to state 74
+  "["           [reduce using rule 38 (Expresion)]
+  "::"          shift, and go to state 73
+  "::"          [reduce using rule 38 (Expresion)]
+  "++"          shift, and go to state 71
+  "++"          [reduce using rule 38 (Expresion)]
+  "--"          shift, and go to state 72
+  "--"          [reduce using rule 38 (Expresion)]
+  "+"           shift, and go to state 64
+  "+"           [reduce using rule 38 (Expresion)]
+  "-"           shift, and go to state 65
+  "-"           [reduce using rule 38 (Expresion)]
+  "*"           shift, and go to state 66
+  "*"           [reduce using rule 38 (Expresion)]
+  "/"           shift, and go to state 67
+  "/"           [reduce using rule 38 (Expresion)]
+  "%"           shift, and go to state 68
+  "%"           [reduce using rule 38 (Expresion)]
+  "\\/"         shift, and go to state 69
+  "\\/"         [reduce using rule 38 (Expresion)]
+  "/\\"         shift, and go to state 70
+  "/\\"         [reduce using rule 38 (Expresion)]
+  "="           shift, and go to state 79
+  "="           [reduce using rule 38 (Expresion)]
+  "/="          shift, and go to state 80
+  "/="          [reduce using rule 38 (Expresion)]
+  ">="          shift, and go to state 78
+  ">="          [reduce using rule 38 (Expresion)]
+  "<="          shift, and go to state 76
+  "<="          [reduce using rule 38 (Expresion)]
+  ">"           shift, and go to state 77
+  ">"           [reduce using rule 38 (Expresion)]
+  "<"           shift, and go to state 75
+  "<"           [reduce using rule 38 (Expresion)]
+  "."           shift, and go to state 63
+  "."           [reduce using rule 38 (Expresion)]
+  $default      reduce using rule 38 (Expresion)
 
 
 state 100
 
-  28) Condicional : "if" Expresion "->" Instrucciones _ "end"
-  29) Condicional : "if" Expresion "->" Instrucciones _ "otherwise" Instrucciones "end"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  39) Expresion : Expresion "+" Expresion _
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "end"         shift, and go to state 123
-  "otherwise"   shift, and go to state 124
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "."           shift, and go to state 63
+  "."           [reduce using rule 39 (Expresion)]
+  $default      reduce using rule 39 (Expresion)
 
 
 state 101
 
-  38) Expresion : Literal "." Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  40) Expresion : Expresion "-" Expresion _
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 38 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "."           shift, and go to state 63
+  "."           [reduce using rule 40 (Expresion)]
+  $default      reduce using rule 40 (Expresion)
 
 
 state 102
 
-  39) Expresion : Literal "+" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  41) Expresion : Expresion "*" Expresion _
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 39 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "."           shift, and go to state 63
+  "."           [reduce using rule 41 (Expresion)]
+  $default      reduce using rule 41 (Expresion)
 
 
 state 103
 
-  40) Expresion : Literal "-" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  42) Expresion : Expresion "/" Expresion _
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 40 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "."           shift, and go to state 63
+  "."           [reduce using rule 42 (Expresion)]
+  $default      reduce using rule 42 (Expresion)
 
 
 state 104
 
-  41) Expresion : Literal "*" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  43) Expresion : Expresion "%" Expresion _
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 41 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "."           shift, and go to state 63
+  "."           [reduce using rule 43 (Expresion)]
+  $default      reduce using rule 43 (Expresion)
 
 
 state 105
 
-  42) Expresion : Literal "/" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  44) Expresion : Expresion "\\/" Expresion _
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 42 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "."           shift, and go to state 63
+  "."           [reduce using rule 44 (Expresion)]
+  $default      reduce using rule 44 (Expresion)
 
 
 state 106
 
-  43) Expresion : Literal "%" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  45) Expresion : Expresion "/\\" Expresion _
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 43 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "."           shift, and go to state 63
+  "."           [reduce using rule 45 (Expresion)]
+  $default      reduce using rule 45 (Expresion)
 
 
 state 107
 
-  44) Expresion : Literal "\\/" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  50) Expresion : Expresion "::" Expresion _
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 44 (Expresion)
+  "["           shift, and go to state 74
+  "."           shift, and go to state 63
+  "."           [reduce using rule 50 (Expresion)]
+  $default      reduce using rule 50 (Expresion)
 
 
 state 108
 
-  45) Expresion : Literal "/\\" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  52) Expresion : Expresion "[" Expresion _ "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 45 (Expresion)
+  "["           shift, and go to state 74
+  "]"           shift, and go to state 123
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
 
 
 state 109
 
-  50) Expresion : Literal "::" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  53) Expresion : Expresion "<" Expresion _
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 50 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 53 (Expresion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
+  $default      reduce using rule 53 (Expresion)
 
 
 state 110
 
-  53) Expresion : Literal "<" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  54) Expresion : Expresion "<=" Expresion _
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 53 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 54 (Expresion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
+  $default      reduce using rule 54 (Expresion)
 
 
 state 111
 
-  54) Expresion : Literal "<=" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  55) Expresion : Expresion ">" Expresion _
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 54 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 55 (Expresion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
+  $default      reduce using rule 55 (Expresion)
 
 
 state 112
 
-  55) Expresion : Literal ">" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  56) Expresion : Expresion ">=" Expresion _
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 55 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 56 (Expresion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
+  $default      reduce using rule 56 (Expresion)
 
 
 state 113
 
-  56) Expresion : Literal ">=" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  57) Expresion : Expresion "=" Expresion _
+  58) Expresion : Expresion _ "/=" Expresion
 
-  $default      reduce using rule 56 (Expresion)
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 57 (Expresion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
+  $default      reduce using rule 57 (Expresion)
 
 
 state 114
 
-  57) Expresion : Literal "=" Expresion _
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
+  58) Expresion : Expresion "/=" Expresion _
 
-  $default      reduce using rule 57 (Expresion)
-
-
-state 115
-
-  58) Expresion : Literal "/=" Expresion _
-
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "."           shift, and go to state 63
+  "."           [reduce using rule 58 (Expresion)]
+  "="           error
+  "/="          error
+  ">="          error
+  "<="          error
+  ">"           error
+  "<"           error
   $default      reduce using rule 58 (Expresion)
 
 
-state 116
+state 115
 
   37) Expresion : "(" Expresion ")" _
 
   $default      reduce using rule 37 (Expresion)
 
 
-state 117
+state 116
 
   30) IteracionInd : "while" Expresion "->" Instrucciones _ "end"
 
-  "end"         shift, and go to state 125
+  "end"         shift, and go to state 124
 
 
-state 118
+state 117
 
   31) IteracionDet : "for" Id "from" Expresion _ "to" Expresion "->" Instrucciones "end"
   32) IteracionDet : "for" Id "from" Expresion _ "to" Expresion "step" Expresion "->" Instrucciones "end"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "to"          shift, and go to state 126
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "to"          shift, and go to state 125
+  "."           shift, and go to state 63
 
 
-state 119
+state 118
 
   10) Tipo : "array" "[" _ Expresion "]" "of" Tipo
 
@@ -1589,49 +2533,129 @@ state 119
   "tknum"       shift, and go to state 47
   "tkcaracter"  shift, and go to state 48
 
-  Expresion     go to state 127
+  Expresion     go to state 126
   Id            go to state 38
   Literal       go to state 40
   Asignacion    go to state 46
 
-state 120
+state 119
 
   12) ListaId : Id "<-" Expresion "," _ ListaId
 
   "tkid"        shift, and go to state 24
 
   Id            go to state 29
-  ListaId       go to state 128
+  ListaId       go to state 127
 
-state 121
+state 120
 
   18) ListaCorchetes : "[" Expresion "]" ListaCorchetes _
 
   $default      reduce using rule 18 (ListaCorchetes)
 
 
-state 122
-
-  17) ListaCorchetes : "[" Expresion "]" _
-  18) ListaCorchetes : "[" Expresion "]" _ ListaCorchetes
-  52) Expresion : Id "[" Expresion "]" _
-
-  "["           shift, and go to state 33
-  "="           reduce using rule 17 (ListaCorchetes)
-  $default      reduce using rule 52 (Expresion)
-
-  ListaCorchetes  go to state 121
-
-state 123
+state 121
 
   28) Condicional : "if" Expresion "->" Instrucciones "end" _
 
   $default      reduce using rule 28 (Condicional)
 
 
+state 122
+
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" _ "->" Instrucciones "end"
+
+  "->"          shift, and go to state 128
+
+
+state 123
+
+  52) Expresion : Expresion "[" Expresion "]" _
+
+  $default      reduce using rule 52 (Expresion)
+
+
 state 124
 
-  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" _ Instrucciones "end"
+  30) IteracionInd : "while" Expresion "->" Instrucciones "end" _
+
+  $default      reduce using rule 30 (IteracionInd)
+
+
+state 125
+
+  31) IteracionDet : "for" Id "from" Expresion "to" _ Expresion "->" Instrucciones "end"
+  32) IteracionDet : "for" Id "from" Expresion "to" _ Expresion "step" Expresion "->" Instrucciones "end"
+
+  "("           shift, and go to state 42
+  "$"           shift, and go to state 45
+  "#"           shift, and go to state 44
+  "-"           shift, and go to state 41
+  "not"         shift, and go to state 43
+  "true"        shift, and go to state 49
+  "false"       shift, and go to state 50
+  "tkid"        shift, and go to state 24
+  "tknum"       shift, and go to state 47
+  "tkcaracter"  shift, and go to state 48
+
+  Id            go to state 38
+  Expresion     go to state 129
+  Literal       go to state 40
+  Asignacion    go to state 46
+
+state 126
+
+  10) Tipo : "array" "[" Expresion _ "]" "of" Tipo
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
+
+  "["           shift, and go to state 74
+  "]"           shift, and go to state 130
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
+
+
+state 127
+
+  12) ListaId : Id "<-" Expresion "," ListaId _
+
+  $default      reduce using rule 12 (ListaId)
+
+
+state 128
+
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" "->" _ Instrucciones "end"
 
   "with"        shift, and go to state 3
   "begin"       shift, and go to state 4
@@ -1651,81 +2675,68 @@ state 124
   IteracionDet  go to state 16
   Entrada       go to state 17
   Salida        go to state 18
-  Instrucciones  go to state 129
-
-state 125
-
-  30) IteracionInd : "while" Expresion "->" Instrucciones "end" _
-
-  $default      reduce using rule 30 (IteracionInd)
-
-
-state 126
-
-  31) IteracionDet : "for" Id "from" Expresion "to" _ Expresion "->" Instrucciones "end"
-  32) IteracionDet : "for" Id "from" Expresion "to" _ Expresion "step" Expresion "->" Instrucciones "end"
-
-  "("           shift, and go to state 42
-  "$"           shift, and go to state 45
-  "#"           shift, and go to state 44
-  "-"           shift, and go to state 41
-  "not"         shift, and go to state 43
-  "true"        shift, and go to state 49
-  "false"       shift, and go to state 50
-  "tkid"        shift, and go to state 24
-  "tknum"       shift, and go to state 47
-  "tkcaracter"  shift, and go to state 48
-
-  Id            go to state 38
-  Expresion     go to state 130
-  Literal       go to state 40
-  Asignacion    go to state 46
-
-state 127
-
-  10) Tipo : "array" "[" Expresion _ "]" "of" Tipo
-
-  "]"           shift, and go to state 131
-
-
-state 128
-
-  12) ListaId : Id "<-" Expresion "," ListaId _
-
-  $default      reduce using rule 12 (ListaId)
-
+  Instrucciones  go to state 131
 
 state 129
 
-  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" Instrucciones _ "end"
+  31) IteracionDet : "for" Id "from" Expresion "to" Expresion _ "->" Instrucciones "end"
+  32) IteracionDet : "for" Id "from" Expresion "to" Expresion _ "step" Expresion "->" Instrucciones "end"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
-  "end"         shift, and go to state 132
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "step"        shift, and go to state 133
+  "."           shift, and go to state 63
+  "->"          shift, and go to state 132
 
 
 state 130
 
-  31) IteracionDet : "for" Id "from" Expresion "to" Expresion _ "->" Instrucciones "end"
-  32) IteracionDet : "for" Id "from" Expresion "to" Expresion _ "step" Expresion "->" Instrucciones "end"
+  10) Tipo : "array" "[" Expresion "]" _ "of" Tipo
 
-  "step"        shift, and go to state 134
-  "->"          shift, and go to state 133
+  "of"          shift, and go to state 134
 
 
 state 131
 
-  10) Tipo : "array" "[" Expresion "]" _ "of" Tipo
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" "->" Instrucciones _ "end"
 
-  "of"          shift, and go to state 135
+  "end"         shift, and go to state 135
 
 
 state 132
-
-  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" Instrucciones "end" _
-
-  $default      reduce using rule 29 (Condicional)
-
-
-state 133
 
   31) IteracionDet : "for" Id "from" Expresion "to" Expresion "->" _ Instrucciones "end"
 
@@ -1749,7 +2760,7 @@ state 133
   Salida        go to state 18
   Instrucciones  go to state 136
 
-state 134
+state 133
 
   32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" _ Expresion "->" Instrucciones "end"
 
@@ -1769,16 +2780,23 @@ state 134
   Literal       go to state 40
   Asignacion    go to state 46
 
-state 135
+state 134
 
   10) Tipo : "array" "[" Expresion "]" "of" _ Tipo
 
-  "array"       shift, and go to state 94
-  "int"         shift, and go to state 91
-  "bool"        shift, and go to state 92
-  "char"        shift, and go to state 93
+  "array"       shift, and go to state 93
+  "int"         shift, and go to state 90
+  "bool"        shift, and go to state 91
+  "char"        shift, and go to state 92
 
   Tipo          go to state 138
+
+state 135
+
+  29) Condicional : "if" Expresion "->" Instrucciones "otherwise" "->" Instrucciones "end" _
+
+  $default      reduce using rule 29 (Condicional)
+
 
 state 136
 
@@ -1790,7 +2808,43 @@ state 136
 state 137
 
   32) IteracionDet : "for" Id "from" Expresion "to" Expresion "step" Expresion _ "->" Instrucciones "end"
+  38) Expresion : Expresion _ "." Expresion
+  39) Expresion : Expresion _ "+" Expresion
+  40) Expresion : Expresion _ "-" Expresion
+  41) Expresion : Expresion _ "*" Expresion
+  42) Expresion : Expresion _ "/" Expresion
+  43) Expresion : Expresion _ "%" Expresion
+  44) Expresion : Expresion _ "\\/" Expresion
+  45) Expresion : Expresion _ "/\\" Expresion
+  47) Expresion : Expresion _ "++"
+  48) Expresion : Expresion _ "--"
+  50) Expresion : Expresion _ "::" Expresion
+  52) Expresion : Expresion _ "[" Expresion "]"
+  53) Expresion : Expresion _ "<" Expresion
+  54) Expresion : Expresion _ "<=" Expresion
+  55) Expresion : Expresion _ ">" Expresion
+  56) Expresion : Expresion _ ">=" Expresion
+  57) Expresion : Expresion _ "=" Expresion
+  58) Expresion : Expresion _ "/=" Expresion
 
+  "["           shift, and go to state 74
+  "::"          shift, and go to state 73
+  "++"          shift, and go to state 71
+  "--"          shift, and go to state 72
+  "+"           shift, and go to state 64
+  "-"           shift, and go to state 65
+  "*"           shift, and go to state 66
+  "/"           shift, and go to state 67
+  "%"           shift, and go to state 68
+  "\\/"         shift, and go to state 69
+  "/\\"         shift, and go to state 70
+  "="           shift, and go to state 79
+  "/="          shift, and go to state 80
+  ">="          shift, and go to state 78
+  "<="          shift, and go to state 76
+  ">"           shift, and go to state 77
+  "<"           shift, and go to state 75
+  "."           shift, and go to state 63
   "->"          shift, and go to state 140
 
 

@@ -188,7 +188,6 @@ class AsignacionB < AST
        @id = id
        @expresion = expresion
        @expresion1 = expresion1
-
     end
     def print_ast indent = ""
         puts "#{indent}ASIGNACION ARRAY "  
@@ -447,8 +446,6 @@ class IteracionInd < AST
 
 end
 
- 
- 
 
 class IteracionDet < AST
     attr_accessor :identificador, :limInf, :limSup, :instrucciones, :iterador 
@@ -546,6 +543,37 @@ class IteracionDetStep < AST
         @instrucciones.print_ast_tabla(tabla, indent + "    " )  if @instrucciones.respond_to? :print_ast   
     end 
 
+end
+
+
+# Clase para las iteraciones determinadas que tienen el paso del iterador
+class IteracionDetStep < AST
+    attr_accessor :identificador, :limInf, :limSup, :instrucciones, :iterador 
+    
+    def initialize ident, li, ls, ins, iter
+        @identificador = ident
+        @limInf = li
+        @limSup = ls
+        @instrucciones = ins
+        @iterador = iter
+    end
+    def print_ast indent = ""
+        puts "#{indent} ITERACION DETERMINADA"
+        puts "#{indent}     identificador:"
+        @identificador.print_ast indent + "      " if @identificador.respond_to? :print_ast
+
+        puts "#{indent}     limite inferior:"
+        @limInf.print_ast indent + "      " if @limInf.respond_to? :print_ast
+        
+        puts "#{indent}     limite superior:"
+        @limSup.print_ast indent + "      " if @limSup.respond_to? :print_ast
+    
+        if @iterador.nil? == false
+            puts "#{indent}     paso de iteracion:"
+            @iterador.print_ast indent + "      " if @iterador.respond_to? :print_ast
+        end
+        @instrucciones.print_ast indent + "      " if @instrucciones.respond_to? :print_ast   
+    end    
 end
 
 
