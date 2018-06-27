@@ -14,6 +14,12 @@ class AST
             a.print_ast indent + "" if a.respond_to? :print_ast
         end
     end
+    def print_ast_tabla(tabla, indent="")
+        attrs.each do |a|
+            a.print_ast_tabla(tabla, indent + "      ")if a.respond_to? :print_ast
+        end
+    end	
+	 
     def set_line l
         @line=l
     end
@@ -21,19 +27,25 @@ class AST
         instance_variables.map do |a|
             instance_variable_get a
         end
-    end
+    end   
 end
-
-
+ 
+ 
 # Clase principal del programa
 class S < AST
-    attr_accessor :bloque
-    
+  attr_accessor :bloque
     def initialize b
-        @bloque = b
+        @bloque = b 
+    end
+    def print_ast indent = ""
+       
+        @bloque.print_ast
+    end
+    def print_ast_tabla(tabla, indent = "")
+        puts "#{indent}Tipo: #{self.class}"
+        @bloque.print_ast_tabla(tabla.hijo[0])
     end
 end
-
 
 # Clase que contiene las declaraciones e instrucciones
 class Bloque < AST
@@ -50,11 +62,24 @@ class Bloque < AST
         puts "#{indent}     SECUENCIACION"
         
         if @instrucciones.nil? == false
-            @instrucciones.print_ast indent + "    " if @instrucciones.respond_to? :print_ast
-        end
+            @instrucciones.print_ast indent + "    " if @instrucciones.respond_to? :print_ast  
+        end 
     end
+  
+    def print_ast_tabla(tabla, indent = "")  
+          
+            if @declaraciones.nil? == false
+                tabla.printTabla(indent + "    ")
+            end
+             puts "#{indent}     SECUENCIACION"
+            if  @instrucciones.nil?
+                @instrucciones.print_ast_tabla(tabla.hijo[0], indent + "    ")
+             
+            end
+            tabla.padre.hijo = tabla.padre.hijo.drop(1)
+          
+     end
 end
-
 
 # Clase que contiene la(s) declaracion(es) de la(s) variable(s)
 class DeclaracionesList < AST
@@ -70,9 +95,10 @@ class DeclaracionesList < AST
             @declaraciones.print_ast indent + "    " if @declaraciones.respond_to? :print_ast             
         end        
     end 
+
 end
 
-
+ 
 # Clase donde se maneja la declaracion de variables   
 class Declaracion < AST
     attr_accessor :identificador, :tipo 
@@ -103,6 +129,13 @@ class ListaIdentificadores < AST
         @expresion.print_ast indent + "    " if @expresion.respond_to? :print_ast
         @lista.print_ast indent + "    " if @lista.respond_to? :print_ast
     end
+    def print_ast_tabla(tabla,indent = "")
+        @id.print_ast_tabla(tabla, indent + "    " ) if @id.respond_to? :print_ast
+        @expresion.print_ast_tabla(tabla, indent + "    " ) if @expresion.respond_to? :print_ast
+        @lista.print_ast_tabla(tabla, indent + "      ") if @lista.respond_to? :print_ast
+    end
+
+
 end
 
 
@@ -116,6 +149,11 @@ class Tipo < AST
     def print_ast indent = ""
      puts "#{indent}         tipo: "  + @tipo.to_s()
     end
+
+    def print_ast_tabla(tabla,indent = "" )
+     puts "#{indent}         tipo: "  + @tipo.to_s()
+    end
+
 end
 
 
@@ -132,6 +170,13 @@ class AsignacionA < AST
         @id.print_ast indent + "    " if @id.respond_to? :print_ast
         @expresion.print_ast indent + "    " if @expresion.respond_to? :print_ast
     end
+
+    def print_ast_tabla(tabla, indent = "")
+        puts "#{indent}ASIGNACION "  
+        @id.print_ast_tabla(tabla, indent + "    " ) if @id.respond_to? :print_ast
+        @expresion.print_ast_tabla(tabla, indent + "    " )  if @expresion.respond_to? :print_ast
+    end
+
 end
 
 
@@ -150,9 +195,21 @@ class AsignacionB < AST
         @id.print_ast indent + "    " if @id.respond_to? :print_ast
         @expresion.print_ast indent + "    " if @expresion.respond_to? :print_ast
         @expresion1.print_ast indent + "    " if @expresion1.respond_to? :print_ast
-    end   
+    end  
+
+    def print_ast_tabla(tabla, indent = "")
+        puts "#{indent}ASIGNACION ARRAY "  
+        @id.print_ast_tabla(tabla, indent + "    " )  if @id.respond_to? :print_ast
+        @expresion.print_ast_tabla(tabla, indent + "    " ) if  @expresion.respond_to? :print_ast
+        @expresion1.print_ast_tabla(tabla, indent + "    " ) if  @expresion1.respond_to? :print_ast
+    end  
+
+
 end
 
+
+
+ 
 
 #Clase que permite tener varios corchetes
 class  Corchetes < AST
@@ -167,9 +224,18 @@ class  Corchetes < AST
             @lista.print_ast indent  if @lista.respond_to? :print_ast             
         end
     end
+
+     def print_ast_tabla(tabla, indent = "")
+        @expresion.print_ast_tabla(tabla, indent + "    " )  if @expresion.respond_to? :print_ast
+        if lista.nil? == false
+            @lista.print_ast_tabla(tabla, indent + "    " )   if @lista.respond_to? :print_ast             
+        end
+    end
+
+
 end
 	
-
+ 
 # Clase correspondiente al nodo de instrucciones
 class ListaIns < AST
     attr_accessor :instruccion, :instrucciones
@@ -183,6 +249,14 @@ class ListaIns < AST
             @instrucciones.print_ast indent  if @instrucciones.respond_to? :print_ast             
         end
     end
+
+    def print_ast_tabla(tabla, indent = "")
+         @instruccion.print_ast_tabla(tabla, indent + "    " )  if @instruccion.respond_to? :print_ast
+        if instrucciones.nil? == false
+            @instrucciones.print_ast_tabla(tabla, indent + "    " )  if @instrucciones.respond_to? :print_ast             
+        end
+    end
+
 end
 
 
@@ -216,7 +290,16 @@ class TipoArray < AST
         puts "#{indent}     dimension del arreglo:"  
         @dimension.print_ast indent + "      " if @dimension.respond_to? :print_ast 
         @tipo.print_ast indent + "      " if @tipo.respond_to? :print_ast
-    end    
+    end  
+
+    def print_ast_tabla(tabla, indent = "")  
+        puts "#{indent}     ASIGNACION ARREGLO"
+        
+        puts "#{indent}     dimension del arreglo:"  
+        @dimension.print_ast_tabla(tabla, indent + "    " ) if @dimension.respond_to? :print_ast 
+        @tipo.print_ast_tabla(tabla, indent + "    " ) if @tipo.respond_to? :print_ast
+    end  
+
 end
 
 
@@ -235,6 +318,14 @@ class ExpresionBinaria < AST
         puts "#{indent}     operador derecho:"
         @derecha.print_ast indent + "      " if @derecha.respond_to? :print_ast
     end
+    def print_ast_tabla(tabla, indent = "")  
+         puts "#{indent}     operacion: #{self.class}"
+        puts "#{indent}     operador izquierdo:"  
+        @izquierda.print_ast_tabla(tabla, indent + "    " ) if @izquierda.respond_to? :print_ast 
+        puts "#{indent}     operador derecho:"
+        @derecha.print_ast_tabla(tabla, indent + "    " ) if @derecha.respond_to? :print_ast
+    end
+
 end
 
 
@@ -282,6 +373,16 @@ class Condicional < AST
         puts "#{indent}     exito:" 
         @instruccion.print_ast indent + "      " if @instruccion.respond_to? :print_ast
     end
+
+    def print_ast_tabla(tabla, indent = "") 
+       puts "#{indent} CONDICIONAL"
+        indent = indent + "      "
+        puts "#{indent}     guardia:" 
+        @guardia.print_ast_tabla(tabla, indent + "    " ) if @guardia.respond_to? :print_ast 
+        puts "#{indent}     exito:" 
+        @instruccion.print_ast_tabla(tabla, indent + "    " ) if @instruccion.respond_to? :print_ast
+    end
+
 end
 
 
@@ -305,6 +406,20 @@ class CondicionalOth < AST
         puts "#{indent}     fracaso:" 
         @instruccion2.print_ast indent + "      " if @instruccion2.respond_to? :print_ast   
     end
+
+     def print_ast_tabla(tabla, indent = "") 
+        puts "#{indent} CONDICIONAL"
+        puts "#{indent}     guardia:" 
+        @guardia.print_ast_tabla(tabla, indent + "    " ) if @guardia.respond_to? :print_ast 
+
+        puts "#{indent}     exito: " 
+        @instruccion1.print_ast_tabla(tabla, indent + "    " ) if @instruccion1.respond_to? :print_ast
+
+        puts "#{indent}     fracaso:" 
+        @instruccion2.print_ast_tabla(tabla, indent + "    " ) if @instruccion2.respond_to? :print_ast   
+    end
+
+
 end
 
 
@@ -322,12 +437,19 @@ class IteracionInd < AST
         @expresion.print_ast indent + "      " if @expresion.respond_to? :print_ast
         @instruccion.print_ast indent + "      " if @instruccion.respond_to? :print_ast
     end
+    def print_ast_tabla(tabla, indent = "") 
+        puts "#{indent} ITERACION INDETERMINADA"
+        puts "#{indent}     guardia:"
+        @expresion.print_ast_tabla(tabla, indent + "    " ) if @expresion.respond_to? :print_ast
+        @instruccion.print_ast_tabla(tabla, indent + "    " ) if @instruccion.respond_to? :print_ast
+    end
+
+
 end
 
  
  
 
-# Clase para las iteraciones determinadas
 class IteracionDet < AST
     attr_accessor :identificador, :limInf, :limSup, :instrucciones, :iterador 
     
@@ -354,7 +476,76 @@ class IteracionDet < AST
             @iterador.print_ast indent + "      " if @iterador.respond_to? :print_ast
         end
         @instrucciones.print_ast indent + "      " if @instrucciones.respond_to? :print_ast   
-    end    
+    end   
+
+    def print_ast_tabla(tabla, indent = "") 
+        puts "#{indent} ITERACION DETERMINADA"
+        puts "#{indent}     identificador:"
+        @identificador.print_ast_tabla(tabla, indent + "    " ) if @identificador.respond_to? :print_ast
+
+        puts "#{indent}     limite inferior:"
+        @limInf.print_ast_tabla(tabla, indent + "    " )  if @limInf.respond_to? :print_ast
+        
+        puts "#{indent}     limite superior:"
+        @limSup.print_ast_tabla(tabla, indent + "    " )  if @limSup.respond_to? :print_ast
+    
+        if @iterador.nil? == false
+            puts "#{indent}     paso de iteracion:"
+            @iterador.print_ast_tabla(tabla, indent + "    " ) if @iterador.respond_to? :print_ast
+        end
+        @instrucciones.print_ast_tabla(tabla, indent + "    " )   if @instrucciones.respond_to? :print_ast   
+    end 
+
+end
+
+
+# Clase para las iteraciones determinadas que tienen el paso del iterador
+class IteracionDetStep < AST
+    attr_accessor :identificador, :limInf, :limSup, :instrucciones, :iterador 
+    
+    def initialize ident, li, ls, ins, iter
+        @identificador = ident
+        @limInf = li
+        @limSup = ls
+        @instrucciones = ins
+        @iterador = iter
+    end
+    def print_ast indent = ""
+        puts "#{indent} ITERACION DETERMINADA"
+        puts "#{indent}     identificador:"
+        @identificador.print_ast indent + "      " if @identificador.respond_to? :print_ast
+
+        puts "#{indent}     limite inferior:"
+        @limInf.print_ast indent + "      " if @limInf.respond_to? :print_ast
+        
+        puts "#{indent}     limite superior:"
+        @limSup.print_ast indent + "      " if @limSup.respond_to? :print_ast
+    
+        if @iterador.nil? == false
+            puts "#{indent}     paso de iteracion:"
+            @iterador.print_ast indent + "      " if @iterador.respond_to? :print_ast
+        end
+        @instrucciones.print_ast indent + "      " if @instrucciones.respond_to? :print_ast   
+    end  
+
+    def print_ast_tabla(tabla,indent = "")
+        puts "#{indent} ITERACION DETERMINADA"
+        puts "#{indent}     identificador:"
+        @identificador.print_ast_tabla(tabla, indent + "    " ) if @identificador.respond_to? :print_ast
+
+        puts "#{indent}     limite inferior:"
+        @limInf.print_ast_tabla(tabla, indent + "    " )   if @limInf.respond_to? :print_ast
+        
+        puts "#{indent}     limite superior:"
+        @limSup.print_ast_tabla(tabla, indent + "    " )  if @limSup.respond_to? :print_ast
+    
+        if @iterador.nil? == false
+            puts "#{indent}     paso de iteracion:"
+            @iterador.print_ast_tabla(tabla, indent + "    " )   if @iterador.respond_to? :print_ast
+        end
+        @instrucciones.print_ast_tabla(tabla, indent + "    " )  if @instrucciones.respond_to? :print_ast   
+    end 
+
 end
 
 
@@ -370,6 +561,12 @@ class ExpresionUnaria < AST
         puts "#{indent}     operador:"
         @expresion.print_ast indent + "    " if @expresion.respond_to? :print_ast    
     end
+    def print_ast_tabla(tabla, indent = "") 
+        puts "#{indent}     operacion: #{self.class}"
+        puts "#{indent}     operador:"
+        @expresion.print_ast_tabla(tabla, indent + "    " )   if @expresion.respond_to? :print_ast    
+    end
+
 end
 
 
@@ -408,7 +605,17 @@ class Io < AST
         end
         @expresion.print_ast indent + "    " if @expresion.respond_to? :print_ast    
     end
-end
+    def print_ast_tabla(tabla, indent = "") 
+         if self.class == Entrada 
+            puts "#{indent}LECTURA"
+        end
+        if self.class == Salida
+            puts "#{indent}ESCRITURA" 
+        end
+        @expresion.print_ast_tabla(tabla, indent = "")  if @expresion.respond_to? :print_ast    
+    end 
+ 
+end  
 
 
 # Clase para los valores a leer
@@ -442,6 +649,25 @@ class Terminales < AST
 
          
     end
+
+     def print_ast_tabla(tabla,indent = "")
+        if self.class == Identificador
+            puts "#{indent}     expresion: VARIABLE"
+             puts "#{indent}     identificador: " + @token.to_s()
+        end
+        if self.class == LitNum
+            puts "#{indent}     expresion: LITERAL NUMERICO"
+             puts "#{indent}     valor: " + @token.to_s()    
+        end
+        if self.class == LitChar
+            puts "#{indent}     expresion: LITERAL CARACTER"
+            puts "#{indent}     identificador: " + @token.to_s()
+        end
+
+         
+    end
+
+
 end
 
 # Tipo de literales que pueden existir en la gramatica
@@ -458,6 +684,11 @@ class TerminalesBool < AST
         @token = t
     end
     def print_ast indent = ""
+        puts "#{indent}     contenedor: LITERAL BOOLEANO" 
+        puts "#{indent}     valor: " + @token.to_s()
+        
+    end
+    def print_ast(tabla, indent = "")
         puts "#{indent}     contenedor: LITERAL BOOLEANO" 
         puts "#{indent}     valor: " + @token.to_s()
         
