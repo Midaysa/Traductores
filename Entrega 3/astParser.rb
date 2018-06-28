@@ -1,4 +1,4 @@
- # astParser.rb
+# astParser.rb
 #
 # Descripcion: Archivo que contiene las clases usadas para crear el arbol 
 # sintactico abstracto correspondiente a las frases del lenguaje BasicTran
@@ -240,15 +240,6 @@ class ListaIns < AST
 
 end
 
-
-# Clase constituida por una instruccion
-class Instruccion < AST
-    attr_accessor :instruccion
-    
-    def initialize i
-        @instruccion = i                    
-    end
-end
 
 
 # Tipos de las variables que pueden existir en la gramatica

@@ -763,49 +763,49 @@ module_eval(<<'.,.,', 'Parser.y', 140)
 
 module_eval(<<'.,.,', 'Parser.y', 148)
   def _reduce_21(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'Parser.y', 149)
   def _reduce_22(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'Parser.y', 150)
   def _reduce_23(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'Parser.y', 151)
   def _reduce_24(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'Parser.y', 152)
   def _reduce_25(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'Parser.y', 153)
   def _reduce_26(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,
 
 module_eval(<<'.,.,', 'Parser.y', 154)
   def _reduce_27(val, _values, result)
-    result = Instruccion.new(val[0])
+    result = val[0]
     result
   end
 .,.,

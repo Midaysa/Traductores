@@ -146,13 +146,13 @@ class Parser
 
 
 		Instruccion
-			: Asignacion ';'						    {result = Instruccion.new(val[0])}
-			| Bloque			    					{result = Instruccion.new(val[0])}
-			| Condicional			    				{result = Instruccion.new(val[0])}
-			| IteracionInd				    			{result = Instruccion.new(val[0])}
-			| IteracionDet					    		{result = Instruccion.new(val[0])}
-			| Entrada ';'								{result = Instruccion.new(val[0])}
-			| Salida ';'								{result = Instruccion.new(val[0])}
+			: Asignacion ';'						    {result = val[0]}
+			| Bloque			    					{result = val[0]}
+			| Condicional			    				{result = val[0]}
+			| IteracionInd				    			{result = val[0]}
+			| IteracionDet					    		{result = val[0]}
+			| Entrada ';'								{result = val[0]}
+			| Salida ';'								{result = val[0]}
 			 
 			;
 

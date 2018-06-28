@@ -27,7 +27,7 @@ class CrearTabla
         tablaActual.asignarHijo(nuevaTabla)
        
         verificarDeclaraciones(bloque.declaraciones, nuevaTabla) 
-        verificarInstruccion(bloque.instrucciones, nuevaTabla)
+        verificarInstrucciones(bloque.instrucciones, nuevaTabla)
     end
 
 
@@ -47,7 +47,7 @@ class CrearTabla
     #Funcion que se encarga de analizar el tipo de declaracion realizada
     #y la envia a la funcion que se encarga de su verificacion
     def verificarDeclaracion(declaracion, tablaActual)
-        puts "holis"
+        #puts "holis"
         case declaracion.identificador
      
         when Identificador
@@ -63,8 +63,6 @@ class CrearTabla
     #Funcion que se encarga de insertar en la tabla los datos de la
     #declaracion del identificador
     def verificarDeclaracionIdentificador(declaracion, tablaActual)
-
-        puts "se inserto unz declaracion identifi"
         case declaracion.tipo
 
         when TipoInt
@@ -145,9 +143,15 @@ class CrearTabla
     #y la envia a la funcion que se encarga de su verificacion
     def verificarInstrucciones(instrucciones, tablaActual)
 
+        #puts "VERIFICAR INSTRUCCIONES"
+
         if instrucciones.nil? == false
             instrucciones.each do |i|
-                verificarinstruccion(i, tablaActual)
+                #puts "CLASE DE LA INSTRUCCION"
+                #puts i.class.name
+                
+                
+                verificarInstruccion(i, tablaActual)
             end
         end 
     end
@@ -156,6 +160,16 @@ class CrearTabla
     #Funcion que se encarga de analizar una instruccion y la envia a la
     #funcion que se encarga de su verificacion
     def verificarInstruccion(instruccion, tablaActual)
+        puts "VERIFICAR INSTRUCCION"
+        #puts "ITERACION INDETERMINADA"
+        #puts instruccion.eql? IteracionInd
+        #puts "ENTRADA"
+        #puts instruccion.instruccion.eql? Entrada
+        #puts "SALIDA"
+        #puts instruccion.eql? Salida
+        #puts instruccion.expresion.token.valor
+        
+        
         case instruccion
 
         when AsignacionA
@@ -230,6 +244,8 @@ class CrearTabla
 
     #Funcion que se encarga de verificar si un identificador esta en la tabla actual
     def verificarIdentificador(identificador, tablaActual)
+        
+        #puts "VERIFICAR IDENTIFICADOR"
         nombre = identificador.token.valor
         return tablaActual.buscar(nombre)
     end
@@ -324,7 +340,7 @@ class CrearTabla
 
 
     #Funcion que se encarga de verificar la instruccion de tipo Salida
-    def Salida(expresion, tablaActual)
+    def verificarInstruccionSalida(expresion, tablaActual)
         tablaAux = tablaActual
         exp = verificarExpresion(instruccion.expresion, tablaAux)
         
@@ -346,16 +362,25 @@ class CrearTabla
 
 
     #Funcion que se encarga de verificar la instruccion de tipo Entrada
-    def Entrada(identificador, tablaActual)
+    def verificarInstruccionEntrada(identificador, tablaActual)
+        
+        #puts "VERIFICAR INSTRUCCION ENTRADA"
+        #puts identificador.expresion.token.valor 
+        #puts identificador.expresion.class.name
+        
         tablaAux = tablaActual
         identificador = verificarExpresion(identificador.expresion, tablaAux)
         
+        #puts "Llegue hasta aquiii"
+        
         while (!identificador and !tablaAux.nil?)
+            #puts "Tampoco entro aqui" 
             identificador = verificarIdentificador(identificador.expresion, tablaAux)
             tablaAux = tablaAux.obtenerPadre
         end
 
         if !identificador
+            #puts "NO ENTRO AQUIII"
             tokenAux = identificador
 
             while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
@@ -370,6 +395,10 @@ class CrearTabla
     #Funcion que se encarga de analizar el tipo de expresion a evaluar
     #y la envia a la funcion que se encarga de su verificacion
     def verificarExpresion(expresion, tablaActual)
+        #puts "VERIFICAMOS LA EXPRESION"
+        #puts expresion.class.name
+        #puts expresion.token.valor
+        
         case expresion
 
         when PuntoParser
@@ -443,7 +472,10 @@ class CrearTabla
 
         when AsignacionB
             return verificarAsignacionB(expresion, tablaActual)
-
+            
+        when Identificador
+            return "tkid" 
+        
         when LitNum
             return "tknum"
 
