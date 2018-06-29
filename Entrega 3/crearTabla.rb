@@ -38,7 +38,7 @@ class CrearTabla
 
         if declaraciones.nil? == false
             declaraciones.each do |i|
-                verificarDeclaracion(i, tablaActual)
+                verificarDeclaracion(i.identificador, i.tipo, tablaActual)
             end
         end 
     end
@@ -46,49 +46,57 @@ class CrearTabla
 
     #Funcion que se encarga de analizar el tipo de declaracion realizada
     #y la envia a la funcion que se encarga de su verificacion
-    def verificarDeclaracion(declaracion, tablaActual)
-        #puts "holis"
-        case declaracion.identificador
+    def verificarDeclaracion(declaracion, tipo, tablaActual)
+        case declaracion
      
         when Identificador
-            verificarDeclaracionIdentificador(declaracion, tablaActual)
+            verificarDeclaracionIdentificador(declaracion, tipo, tablaActual)
 
         when AsignacionA
-            verificarDeclaracionAsignacionA(declaracion, tablaActual)
+            verificarDeclaracionAsignacionA(declaracion.id, tipo, tablaActual)
+            
+        when ListaIdentificadores
+            verificarDeclaracionIdentificador(declaracion.id, tipo, tablaActual)
+            verificarDeclaracion(declaracion.lista, tipo, tablaActual)            
+            
+        when ListaAsignaciones
+            verificarDeclaracionAsignacionA(declaracion.id.id, tipo, tablaActual) 
+            verificarDeclaracion(declaracion.lista, tipo, tablaActual)
+        
         end
     end
 
- 
 
     #Funcion que se encarga de insertar en la tabla los datos de la
     #declaracion del identificador
-    def verificarDeclaracionIdentificador(declaracion, tablaActual)
-        case declaracion.tipo
+    def verificarDeclaracionIdentificador(identificador, tipo, tablaActual)
+        case tipo
 
         when TipoInt
             begin
-            
-                asigno = tablaActual.insertar(declaracion.identificador.token.valor, "int")
-                token = declaracion.identificador.token
+                asigno = tablaActual.insertar(identificador.token.valor, "int")
+                token = identificador.token
             end
 
         when TipoBool
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.token.valor, "bool")
-                token = declaracion.identificador.token            
+                asigno = tablaActual.insertar(identificador.token.valor, "bool")
+                token = identificador.token            
             end
 
         when TipoChar
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.token.valor, "char")
-                token = declaracion.identificador.token
+                asigno = tablaActual.insertar(identificador.token.valor, "char")
+                token = identificador.token
             end
 
         when TipoArray
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.token.valor, "array")
-                token = declaracion.identificador.token
+                asigno = tablaActual.insertar(identificador.token.valor, "array")
+                token = identificador.token
             end
+            
+        when Tipo
         end
 
         #Si los datos no se pudieron incluir en la tabla se empila en la tabla de errores  un mensaje con el error
@@ -101,31 +109,31 @@ class CrearTabla
 
     #Funcion que se encarga de insertar en la tabla los datos de la 
     #declaracion de la asignacion
-    def verificarDeclaracionAsignacionA(declaracion, tablaActual)
-        case declaracion.tipo
+    def verificarDeclaracionAsignacionA(declaracion, tipo, tablaActual)
+        case tipo
 
         when TipoInt
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.izquierda.token.valor, "int")
-                token = declaracion.identificador.izquierda.token
+                asigno = tablaActual.insertar(declaracion.token.valor, "int")
+                token = declaracion.token
             end
 
         when TipoBool
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.izquierda.token.valor, "bool")
-                token = declaracion.identificador.izquierda.token            
+                asigno = tablaActual.insertar(declaracion.token.valor, "bool")
+                token = declaracion.token            
             end
 
         when TipoChar
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.izquierda.token.valor, "char")
-                token = declaracion.identificador.izquierda.token
+                asigno = tablaActual.insertar(declaracion.token.valor, "char")
+                token = declaracion.token
             end
 
         when TipoArray
             begin
-                asigno = tablaActual.insertar(declaracion.identificador.izquierda.token.valor, "array")
-                token = declaracion.identificador.izquierda.token
+                asigno = tablaActual.insertar(declaracion.token.valor, "array")
+                token = declaracion.token
             end
         end    
 
@@ -143,16 +151,12 @@ class CrearTabla
     #y la envia a la funcion que se encarga de su verificacion
     def verificarInstrucciones(instrucciones, tablaActual)
 
-        #puts "VERIFICAR INSTRUCCIONES"
-
         if instrucciones.nil? == false
             instrucciones.each do |i|
-                #puts "CLASE DE LA INSTRUCCION"
-                #puts i.class.name
-                
-                
                 verificarInstruccion(i, tablaActual)
             end
+        else 
+            verificarInstruccion(instrucciones.instruccion, tablaActual)
         end 
     end
 
@@ -160,15 +164,9 @@ class CrearTabla
     #Funcion que se encarga de analizar una instruccion y la envia a la
     #funcion que se encarga de su verificacion
     def verificarInstruccion(instruccion, tablaActual)
-        puts "VERIFICAR INSTRUCCION"
-        #puts "ITERACION INDETERMINADA"
-        #puts instruccion.eql? IteracionInd
-        #puts "ENTRADA"
-        #puts instruccion.instruccion.eql? Entrada
-        #puts "SALIDA"
-        #puts instruccion.eql? Salida
-        #puts instruccion.expresion.token.valor
         
+        puts "VERIFICAR INSTRUCCION"
+        puts instruccion
         
         case instruccion
 
@@ -204,6 +202,7 @@ class CrearTabla
         #Se busca en los alcances hasta encontrar la primera variable con el nombre de identificador
         tablaAux = tablaActual
         identificador = verificarIdentificador(instruccion.id, tablaAux)
+        
 
         while (!identificador and !tablaAux.nil?)
             identificador = verificarIdentificador(instruccion.id, tablaAux)
@@ -306,6 +305,44 @@ class CrearTabla
     end
 
 
+
+
+    def verificarInstruccionIteracionInd(instruccion, tablaActual)
+        #Se busca en los alcances hasta encontrar la primera expresion valida
+        tablaAux = tablaActual
+        guardia = verificarExpresion(instruccion.expresion, tablaAux)
+
+        #puts "VEMOS LA GUARDIA  "
+        #puts guardia
+        #puts tablaAux.nil?
+        
+        #system.out
+
+
+        while (!guardia and !tablaAux.nil?)
+            guardia = verificarExpresion(instruccion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
+        end
+
+        #Verifica si la guardia es de tipo booleano
+        if (not guardia.eql? "bool") then
+            tokenAux = instruccion.expresion
+
+            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
+                tokenAux = tokenAux.izquierda
+            end
+
+            error = "Error en la linea #{tokenAux.token.linea}: La guardia del IF no es de tipo booleano"
+            $tablaErrores << error
+        end
+
+        verificarInstruccion(instruccion, tablaActual)
+    end
+
+
+
+
+
     #Funcion que se encarga de verificar la instruccion del tipo IteracionDet
     def verificarIteracionDet(instruccion, tablaPadre)
         #Se crea la tabla para el manejo del for
@@ -342,11 +379,17 @@ class CrearTabla
     #Funcion que se encarga de verificar la instruccion de tipo Salida
     def verificarInstruccionSalida(expresion, tablaActual)
         tablaAux = tablaActual
-        exp = verificarExpresion(instruccion.expresion, tablaAux)
+        exp = verificarExpresion(expresion.expresion, tablaAux)
+        
+        #puts "EXPRESION Y TABLA AUX"
+        #puts exp
+        #puts tablaAux.nil?
+        
+        
         
         while (!exp and !tablaAux.nil?)
-            exp = verificarExpresion(instruccion.expresion, tablaAux)
-            tablaAux = tablaAux.obtenerPadre
+            exp = verificarExpresion(expresion.expresion, tablaAux)
+            tablaAux = tablaAux.obtenerPadre()
         end
 
         if !exp
@@ -356,38 +399,21 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end                
             error = "Error en línea #{tokenAux.token.linea}: el tipo de la expresion '#{tokenAux.token.valor}' no esta en el alcance."
-            $errorTabla << error            
+            $tablaErrores << error            
         end 
     end
 
 
     #Funcion que se encarga de verificar la instruccion de tipo Entrada
     def verificarInstruccionEntrada(identificador, tablaActual)
-        
-        #puts "VERIFICAR INSTRUCCION ENTRADA"
-        #puts identificador.expresion.token.valor 
-        #puts identificador.expresion.class.name
-        
+
         tablaAux = tablaActual
-        identificador = verificarExpresion(identificador.expresion, tablaAux)
-        
-        #puts "Llegue hasta aquiii"
-        
-        while (!identificador and !tablaAux.nil?)
-            #puts "Tampoco entro aqui" 
-            identificador = verificarIdentificador(identificador.expresion, tablaAux)
-            tablaAux = tablaAux.obtenerPadre
-        end
+        id = verificarExpresion(identificador.expresion, tablaAux)
 
-        if !identificador
-            #puts "NO ENTRO AQUIII"
-            tokenAux = identificador
-
-            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
-                tokenAux = tokenAux.izquierda
-            end                
-            error = "Error en línea #{tokenAux.token.linea}: el tipo de la expresion '#{tokenAux.token.valor}' no esta en el alcance."
-            $errorTabla << error            
+        if tablaActual.buscar(identificador) == false
+            error = "Error en línea #{identificador.expresion.token.linea}: el tipo de la expresion '#{identificador.expresion.token.valor}' no esta en el alcance."
+            $tablaErrores << error            
+            puts "error"
         end 
     end 
 
@@ -395,6 +421,8 @@ class CrearTabla
     #Funcion que se encarga de analizar el tipo de expresion a evaluar
     #y la envia a la funcion que se encarga de su verificacion
     def verificarExpresion(expresion, tablaActual)
+        #puts expresion.token.valor
+        
         #puts "VERIFICAMOS LA EXPRESION"
         #puts expresion.class.name
         #puts expresion.token.valor
@@ -522,7 +550,7 @@ class CrearTabla
             end
             
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion PUNTO son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
 
@@ -558,7 +586,7 @@ class CrearTabla
             end
             
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion SUMAR son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -594,7 +622,7 @@ class CrearTabla
             end
             
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion RESTAR son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -630,7 +658,7 @@ class CrearTabla
             end
             
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MULTIPLICACION son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end   
     
@@ -666,7 +694,7 @@ class CrearTabla
             end
             
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DIVISION son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
 
@@ -702,7 +730,7 @@ class CrearTabla
             end
             
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MODULO son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end 
     
@@ -738,7 +766,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DISYUNCION son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             else 
                 tokenAux = expresion.derecha
                 
@@ -746,7 +774,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DISYUNCION son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             end
         end
     end
@@ -783,7 +811,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONJUNCION son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             else 
                 tokenAux = expresion.derecha
                 
@@ -791,7 +819,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONJUNCION son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             end
         end
     end 
@@ -835,7 +863,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             else 
                 tokenAux = expresion.derecha
                 
@@ -843,7 +871,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             end
         end
     end
@@ -880,7 +908,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             else 
                 tokenAux = expresion.derecha
                 
@@ -888,7 +916,7 @@ class CrearTabla
                     tokenAux = tokenAux.izquierda
                 end
                 error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion CONCATENAR son diferentes"
-                $errorTabla << error
+                $tablaErrores << error
             end
         end
     end
@@ -924,7 +952,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MENOR QUE son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -959,7 +987,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MENOR IGUAL QUE son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -994,7 +1022,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MAYOR QUE son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1029,7 +1057,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion MAYOR IGUAL QUE son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1064,7 +1092,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion IGUALDAD son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end    
 
@@ -1099,7 +1127,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: los tipos de la operacion DESIGUAL son diferentes"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
 
@@ -1125,7 +1153,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion NEGATIVO no es bool"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
 
@@ -1151,7 +1179,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion NOT no es bool"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1177,7 +1205,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion CARACTER SIGUIENTE no es caracter"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1203,7 +1231,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion CARACTER ANTERIOR no es caracter"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1229,7 +1257,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion VALOR ASCII no es caracter"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1255,7 +1283,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo del operando de la operacion SHIFT no es array"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
 
@@ -1290,7 +1318,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo de la variable no coincide con la del valor que se le va a asignar"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end
     
@@ -1324,7 +1352,7 @@ class CrearTabla
                 tokenAux = tokenAux.izquierda
             end
             error = "Error en línea #{tokenAux.token.linea}: el tipo de la variable no coincide con la del valor que se le va a asignar"
-            $errorTabla << error
+            $tablaErrores << error
         end
     end    
 

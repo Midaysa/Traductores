@@ -120,6 +120,31 @@ class ListaIdentificadores < AST
 end
 
 
+
+# Clase constituida por lo contenido en la lista de identificadores con asignaciones
+class ListaAsignaciones < AST
+    
+   attr_accessor :id, :expresion,:lista
+   def initialize id, expresion,lista
+       @id = id
+       @expresion = expresion
+       @lista = lista
+    end   
+    def print_ast indent = ""
+        @id.print_ast indent + "    " if @id.respond_to? :print_ast
+        @expresion.print_ast indent + "    " if @expresion.respond_to? :print_ast
+        @lista.print_ast indent + "    " if @lista.respond_to? :print_ast
+    end
+    def print_ast_tabla(tabla,indent = "")
+        @id.print_ast_tabla(tabla, indent + "    " ) if @id.respond_to? :print_ast
+        @expresion.print_ast_tabla(tabla, indent + "    " ) if @expresion.respond_to? :print_ast
+        @lista.print_ast_tabla(tabla, indent + "      ") if @lista.respond_to? :print_ast
+    end
+
+
+end
+
+
 #Clase que contiene el tipo de una variable  
 class Tipo < AST
     attr_accessor :tipo

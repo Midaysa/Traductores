@@ -65,7 +65,6 @@ class TablaSimbolos
         puts "#{indent}Tabla De Simbolos"
         indent = indent + "      "
         tabla.each do |identificador,tipo|
-            puts identificador
             puts "#{indent}Nombre: #{identificador}, Tipo: #{tipo}\n" 
         end
     end

@@ -120,9 +120,9 @@ class Parser
 		
 		ListaId
 			: Id ',' ListaId			            {result = ListaIdentificadores.new(val[0], nil , val[2])  }
-			| Id '<-' Expresion ',' ListaId	        {result = ListaIdentificadores.new(val[0], val[2], val[4])}
+			| Asignacion ',' ListaId				{result = ListaAsignaciones.new(val[0], nil, val[2])}
 			| Id 								    {result = val[0]}
-			| Id '<-' Expresion 			    	{result = ListaIdentificadores.new(val[0], val[2], nil)}
+			| Asignacion		 			    	{result = val[0]}
 			;
 
 		Asignacion
