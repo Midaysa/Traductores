@@ -31,7 +31,6 @@ class CrearTabla
     end
 
 
-
     #Funcion que se encarga de analizar el tipo de declaracion realizada
     #y la envia a la funcion que se encarga de su verificacion
     def verificarDeclaraciones(declaraciones, tablaActual)
@@ -145,12 +144,10 @@ class CrearTabla
     end
 
 
-
-
     #Funcion que se encarga de analizar el tipo de declaracion realizada
     #y la envia a la funcion que se encarga de su verificacion
     def verificarInstrucciones(instrucciones, tablaActual)
-
+        
         if instrucciones.nil? == false
             instrucciones.each do |i|
                 verificarInstruccion(i, tablaActual)
@@ -201,42 +198,12 @@ class CrearTabla
     def verificarInstruccionasignacionA(instruccion, tablaActual)
         #Se busca en los alcances hasta encontrar la primera variable con el nombre de identificador
         tablaAux = tablaActual
-        identificador = verificarIdentificador(instruccion.id, tablaAux)
+        ins = verificarIdentificador(instruccion.id, tablaAux)
+        contenido = tablaActual.buscar(instruccion.id.token.valor)
         
-
-        while (!identificador and !tablaAux.nil?)
-            identificador = verificarIdentificador(instruccion.id, tablaAux)
-            tablaAux = tablaAux.obtenerPadre()
-        end
-
-        tablaVerificacion = tablaAux
-
-        #Si no se encuentra la variable identificador en ningun alcance se empila en la tabla de errores un mensaje con el error
-        if !identificador then
-            error = "Error en linea #{instruccion.id.token.linea}, columna #{instruccion.id.token.columna}: No se encontro la variable '#{identificador.id.token.valor}' en ningun alcance"
-            $tablaErrores << error
-        end        
- 
-        #Se busca en los alcances hasta encontrar la primera expresion valida
-        tablaAux = tablaActual
-        expresion = verificarExpresion(instruccion.expresion, tablaAux)
-
-        while (!expresion and !tablaAux.nil?)
-            expresion = verificarExpresion(instruccion.expresion, tablaAux)
-            tablaAux = tablaAux.obtenerPadre()
-        end
-         
-        if !tablaVerificacion.nil? then
-            if tablaVerificacion.for then
-                error = "Error en la linea #{instruccion.id.token.linea}, columna #{instruccion.id.token.columna}: no se puede modificar una variable de iteracion"
-                $tablaErrores << error
-            end
-        end
-
-        #Si ambos lados de la asignacion no son del mismo tipo, se empila en la tabla de errores un mensaje con el error
-        if (not identificador.eql? expresion) then
-            error = "Error en la linea #{instruccion.id.token.linea}, columna #{instruccion.id.token.columna}: el tipo de la expresion es distinta al del identificador"
-            $tablaErrores << error
+        if  !contenido 
+            error = "Error en línea #{instruccion.id.token.linea}: el tipo de la expresion '#{instruccion.id.token.valor}' no esta en el alcance."
+            $tablaErrores << error            
         end
     end
 
@@ -380,40 +347,24 @@ class CrearTabla
     def verificarInstruccionSalida(expresion, tablaActual)
         tablaAux = tablaActual
         exp = verificarExpresion(expresion.expresion, tablaAux)
-        
-        #puts "EXPRESION Y TABLA AUX"
-        #puts exp
-        #puts tablaAux.nil?
-        
-        
-        
-        while (!exp and !tablaAux.nil?)
-            exp = verificarExpresion(expresion.expresion, tablaAux)
-            tablaAux = tablaAux.obtenerPadre()
-        end
-
-        if !exp
-            tokenAux = expresion
-
-            while (!(tokenAux.class.eql? Identificador) and !(tokenAux.class.eql? LitNum) and !(tokenAux.class.eql? LitChar) and !(tokenAux.class.eql? LitTrue) and !(tokenAux.class.eql? LitFalse))
-                tokenAux = tokenAux.izquierda
-            end                
-            error = "Error en línea #{tokenAux.token.linea}: el tipo de la expresion '#{tokenAux.token.valor}' no esta en el alcance."
+        contenido = tablaActual.buscar(expresion.expresion.token.valor) 
+   
+        if !contenido
+            error = "Error en línea #{expresion.expresion.token.linea}: el tipo de la expresion '#{expresion.expresion.token.valor}' no esta en el alcance."
             $tablaErrores << error            
-        end 
+        end
     end
 
 
     #Funcion que se encarga de verificar la instruccion de tipo Entrada
     def verificarInstruccionEntrada(identificador, tablaActual)
-
         tablaAux = tablaActual
         id = verificarExpresion(identificador.expresion, tablaAux)
-
-        if tablaActual.buscar(identificador) == false
+        contenido = tablaActual.buscar(identificador.expresion.token.valor)
+        
+        if !contenido
             error = "Error en línea #{identificador.expresion.token.linea}: el tipo de la expresion '#{identificador.expresion.token.valor}' no esta en el alcance."
             $tablaErrores << error            
-            puts "error"
         end 
     end 
 
@@ -423,8 +374,8 @@ class CrearTabla
     def verificarExpresion(expresion, tablaActual)
         #puts expresion.token.valor
         
-        #puts "VERIFICAMOS LA EXPRESION"
-        #puts expresion.class.name
+        puts "VERIFICAMOS LA EXPRESION"
+        puts expresion.class.name
         #puts expresion.token.valor
         
         case expresion
@@ -505,6 +456,7 @@ class CrearTabla
             return "tkid" 
         
         when LitNum
+            puts "TK NUUUUM"
             return "tknum"
 
         when LitChar

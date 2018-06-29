@@ -50,6 +50,11 @@ class TablaSimbolos
     end
 
     def buscar(identificador)
+        #puts "BUSCANDO ....."
+        #puts identificador
+        #puts @tabla.has_key?(identificador)
+        #puts "***** fin de la busqueda"
+        
         if @tabla.has_key?(identificador)
             return @tabla[identificador]
         else
